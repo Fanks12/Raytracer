@@ -1,0 +1,8 @@
+# build
+
+target/
+raytracer
+
+#development
+
+.idea/
