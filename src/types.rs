@@ -1,55 +1,6 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign};
-
-pub struct Vector3D {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-}
+pub mod point;
+pub mod vector;
 
 pub trait HasLength {
     fn length(&self) -> f64;
-}
-
-impl HasLength for Vector3D {
-    fn length(&self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
-}
-
-impl Default for Vector3D {
-    fn default() -> Self {
-        Vector3D { x: 0.0, y: 0.0, z: 0.0 }
-    }
-}
-
-impl Add for Vector3D {
-    type Output = Vector3D;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        Vector3D { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
-    }
-}
-
-impl AddAssign for Vector3D {
-    fn add_assign(&mut self, rhs: Self) {
-        self.x += rhs.x;
-        self.y += rhs.y;
-        self.z += rhs.z;
-    }
-}
-
-impl Mul<f64> for Vector3D {
-    type Output = Vector3D;
-
-    fn mul(self, rhs: f64) -> Self::Output {
-        Vector3D { x: self.x + rhs, y: self.y + rhs, z: self.z + rhs }
-    }
-}
-
-impl MulAssign<f64> for Vector3D {
-    fn mul_assign(&mut self, rhs: f64) {
-        self.x *= rhs;
-        self.y *= rhs;
-        self.z *= rhs;
-    }
 }
