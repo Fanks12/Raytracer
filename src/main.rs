@@ -1,3 +1,5 @@
+mod types;
+
 use std::env;
 
 fn main() {
@@ -8,7 +10,7 @@ fn main() {
         std::process::exit(84);
     }
 
-    if args[1].eq("--help") {
+    if args[1] == "--help" {
         print_help(&args[0]);
     }
 }
