@@ -9,7 +9,6 @@ fn main() {
         eprintln!("Error: Number of arguments");
         std::process::exit(84);
     }
-
     if args[1] == "--help" {
         print_help(&args[0]);
     }
