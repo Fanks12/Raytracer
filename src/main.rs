@@ -1,20 +1,17 @@
-mod types;
+//
+// EPITECH PROJECT, 2023
+// B-OOP-400-PAR-4-1-raytracer-florian.lauch
+// File description:
+// main
+//
 
-use std::env;
+mod vector3d;
+
+use vector3d::Vector3D;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let vector = Vector3D::new(2.0, 3.0, 4.0);
+    let vector2 = Vector3D::default();
 
-    if args.len() != 2 {
-        eprintln!("Error: Number of arguments");
-        std::process::exit(84);
-    }
-    if args[1] == "--help" {
-        print_help(&args[0]);
-    }
-}
-
-fn print_help(binary: &String) {
-    println!("USAGE: {} <SCENE_FILE>", binary);
-    println!("\tSCENE_FILE: scene configuration");
+    println!("Vector3D = {:?}", vector);
 }
