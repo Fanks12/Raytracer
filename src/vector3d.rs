@@ -23,9 +23,7 @@ impl ops::Add<Vector3D> for Vector3D {
 }
 
 impl ops::AddAssign for Vector3D {
-    type Output = Vector3D;
-
-    fn add_assign(self, other : Self) {
+    fn add_assign(&mut self, other : Self) {
         *self = Self {
             x : self.x + other.x,
             y : self.y + other.y,
@@ -43,9 +41,7 @@ impl ops::Sub<Vector3D> for Vector3D {
 }
 
 impl ops::SubAssign for Vector3D {
-    type Output = Vector3D;
-
-    fn sub_assign(self, other : Self) {
+    fn sub_assign(&mut self, other : Self) {
         *self = Self {
             x : self.x - other.x,
             y : self.y - other.y,
@@ -63,9 +59,7 @@ impl ops::Mul<Vector3D> for Vector3D {
 }
 
 impl ops::MulAssign for Vector3D {
-    type Output = Vector3D;
-
-    fn mul_assign(self, other : Self) {
+    fn mul_assign(&mut self, other : Self) {
         *self = Self {
             x : self.x * other.x,
             y : self.y * other.y,
