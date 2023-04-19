@@ -9,10 +9,6 @@ pub struct Rectangle3D {
 
 impl Rectangle3D {
     pub fn point_at(&self, x: f64, y: f64) -> Point3D {
-        let mut point = self.origin.clone();
-
-        point += self.bottom_side * x;
-        point += self.left_side * y;
-        point
+        self.origin + self.bottom_side * x + self.left_side * y
     }
 }

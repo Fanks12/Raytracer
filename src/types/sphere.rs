@@ -1,6 +1,6 @@
-use crate::types::Hitable;
 use crate::types::point::Point3D;
 use crate::types::ray::Ray;
+use crate::types::traits::Hitable;
 
 pub struct Sphere {
     pub center: Point3D,

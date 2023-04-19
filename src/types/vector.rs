@@ -1,5 +1,4 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
-use crate::types::HasLength;
 
 #[derive(Clone, Copy)]
 pub struct Vector3D {
@@ -8,15 +7,13 @@ pub struct Vector3D {
     pub z: f64,
 }
 
-impl HasLength for Vector3D {
-    fn length(&self) -> f64 {
-        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
-    }
-}
-
 impl Vector3D {
     pub fn dot_product(&self, rhs: Self) -> f64 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
+    }
+
+    pub fn length(&self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 }
 
