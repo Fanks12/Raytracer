@@ -14,6 +14,12 @@ impl Point3D {
     }
 }
 
+impl Default for Point3D {
+    fn default() -> Self {
+        Point3D { x: 0.0, y: 0.0, z: 0.0 }
+    }
+}
+
 impl Add for Point3D {
     type Output = Point3D;
 

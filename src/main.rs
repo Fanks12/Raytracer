@@ -1,6 +1,8 @@
+mod core;
 mod types;
 
 use std::env;
+use crate::core::tracer::raytrace;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -12,6 +14,7 @@ fn main() {
     if args[1] == "--help" {
         print_help(&args[0]);
     }
+    raytrace();
 }
 
 fn print_help(binary: &String) {
