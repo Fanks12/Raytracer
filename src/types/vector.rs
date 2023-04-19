@@ -1,6 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 use crate::types::HasLength;
 
+#[derive(Clone, Copy)]
 pub struct Vector3D {
     pub x: f64,
     pub y: f64,
@@ -45,7 +46,7 @@ impl Mul<f64> for Vector3D {
     type Output = Vector3D;
 
     fn mul(self, rhs: f64) -> Self::Output {
-        Vector3D { x: self.x + rhs, y: self.y + rhs, z: self.z + rhs }
+        Vector3D { x: self.x * rhs, y: self.y * rhs, z: self.z * rhs }
     }
 }
 

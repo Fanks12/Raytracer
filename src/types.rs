@@ -2,6 +2,7 @@ use crate::types::ray::Ray;
 
 pub mod point;
 pub mod ray;
+pub mod rectangle;
 pub mod sphere;
 pub mod vector;
 
