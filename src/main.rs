@@ -1,23 +1,21 @@
 mod core;
+mod opts;
 mod types;
 
-use std::env;
 use crate::core::tracer::raytrace;
+use crate::opts::check_opts;
+use crate::opts::OptsResult;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() != 2 {
-        eprintln!("Error: Number of arguments");
-        std::process::exit(84);
+    match check_opts() {
+        OptsResult::Ok(opts_args) => {
+            raytrace();
+        }
+        OptsResult::Help => {
+            std::process::exit(0);
+        }
+        OptsResult::Err => {
+            std::process::exit(84);
+        }
     }
-    if args[1] == "--help" {
-        print_help(&args[0]);
-    }
-    raytrace();
-}
-
-fn print_help(binary: &String) {
-    println!("USAGE: {} <SCENE_FILE>", binary);
-    println!("\tSCENE_FILE: scene configuration");
 }
