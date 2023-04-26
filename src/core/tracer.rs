@@ -4,8 +4,10 @@ use crate::types::rectangle::Rectangle3D;
 use crate::types::sphere::Sphere;
 use crate::types::traits::Hitable;
 use crate::types::vector::Vector3D;
+use std::error;
 
-pub fn raytrace() {
+pub fn raytrace() -> Result<(), Box<dyn error::Error>>
+{
     let eye: Point3D = Point3D { x: 0.0, y: 0.0, z: -5.0 };
     let screen_origin: Point3D = Point3D { x: -5.0, y: -5.0, z: 0.0 };
     let screen_left: Vector3D = Vector3D { x: 10.0, y: 0.0, z: 0.0 };
@@ -33,4 +35,5 @@ pub fn raytrace() {
 
     let out: String = output.iter().collect();
     println!("{}", out);
+    Ok(())
 }
