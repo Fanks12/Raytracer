@@ -12,6 +12,15 @@ impl Point3D {
     pub fn to_vec(self) -> Vector3D {
         Vector3D { x: self.x, y: self.y, z: self.z }
     }
+
+    pub fn axisValue(&self, c: char) -> f64 {
+        if (c == 'x')
+            self.x
+        else if (c == 'y')
+            self.y
+        else if (c == 'z')
+            self.z
+    }
 }
 
 impl Default for Point3D {

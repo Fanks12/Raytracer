@@ -15,6 +15,15 @@ impl Vector3D {
     pub fn length(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
+
+    pub fn axisValue(&self, c: char) -> f64 {
+        if (c == 'x')
+            self.x
+        else if (c == 'y')
+            self.y
+        else if (c == 'z')
+            self.z
+    }
 }
 
 impl Default for Vector3D {
