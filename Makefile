@@ -7,9 +7,7 @@
 
 NAME	=	raytracer
 
-all: $(NAME)
-
-$(NAME):
+all:
 	cargo build --release
 	cp target/release/$(NAME) .
 
