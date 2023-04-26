@@ -35,6 +35,10 @@ impl Add for Point3D {
     fn add(self, rhs: Point3D) -> Self::Output {
         Point3D { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
     }
+
+    fn add(self, rhs: Vector3D) -> Self::Output {
+        Point3D { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
+    }
 }
 
 impl AddAssign for Point3D {

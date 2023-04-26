@@ -17,11 +17,18 @@ impl Hitable for Plane {
 
         diffa.powi(2) > diffb.powi(2)
     }
-    // ratio = (padding - a) / ray.vector.axisValue(axis)
-    // x = origin.x + vector.x * ratio
-    // y = origin.y + vector.y * ratio
-    // z = origin.z + vector.z * ratio
-    // ou
-    // intersect = origin + vector * ratio
-    // intersection point
+
+    fn intersectPoint(&self, ray: Ray) -> Point3D {
+        if (self.hits(ray)) {
+            // ratio = (padding - a) / ray.vector.axisValue(axis)
+            // x = origin.x + vector.x * ratio
+            // y = origin.y + vector.y * ratio
+            // z = origin.z + vector.z * ratio
+            // ou
+            origin + vector * ratio
+        } else {
+            Point3D { x: 0.0, y: 0.0, z: 0.0 }
+        }
+
+    }
 }
