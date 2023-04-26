@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn error::Error>>
         std::process::exit(84);
     }
     if args[1] == "--help" {
-        print_help(&args[0]);
+        return print_help(&args[0])
     }
     let result = parse_file(&args[1]);
     match result {
@@ -26,7 +26,8 @@ fn main() -> Result<(), Box<dyn error::Error>>
     }
 }
 
-fn print_help(binary: &String) {
+fn print_help(binary: &String) -> Result<(), Box<dyn error::Error>> {
     println!("USAGE: {} <SCENE_FILE>", binary);
     println!("\tSCENE_FILE: scene configuration");
+    Ok(())
 }
