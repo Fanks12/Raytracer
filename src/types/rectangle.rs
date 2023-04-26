@@ -1,6 +1,8 @@
 use crate::types::point::Point3D;
 use crate::types::vector::Vector3D;
+use serde::{Deserialize, Serialize};
 
+#[derive(Default, Serialize, Deserialize)]
 pub struct Rectangle3D {
     pub origin: Point3D,
     pub bottom_side: Vector3D,

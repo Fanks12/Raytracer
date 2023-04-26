@@ -1,6 +1,8 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 
-#[derive(Clone, Copy)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Vector3D {
     pub x: f64,
     pub y: f64,

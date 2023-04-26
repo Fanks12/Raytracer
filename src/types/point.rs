@@ -1,7 +1,8 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use crate::types::vector::Vector3D;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct Point3D {
     pub x: f64,
     pub y: f64,
