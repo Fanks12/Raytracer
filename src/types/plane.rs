@@ -16,7 +16,7 @@ impl Hitable for Plane {
         let diffa: f64 = a - self.padding;
         let diffb: f64 = b - self.padding;
 
-        diffa.powi(2) > diffb.powi(2)
+        diffa.abs() > diffb.abs()
     }
 }
 
