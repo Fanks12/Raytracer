@@ -13,13 +13,13 @@ impl Point3D {
         Vector3D { x: self.x, y: self.y, z: self.z }
     }
 
-    pub fn axisValue(&self, c: char) -> f64 {
-        if (c == 'x')
-            self.x
-        else if (c == 'y')
-            self.y
-        else if (c == 'z')
-            self.z
+    pub fn axis_value(&self, c: char) -> f64 {
+        match c {
+            'X' => self.x,
+            'Y' => self.y,
+            'Z' => self.z,
+            _ => 0.0,
+        }
     }
 }
 
@@ -33,10 +33,6 @@ impl Add for Point3D {
     type Output = Point3D;
 
     fn add(self, rhs: Point3D) -> Self::Output {
-        Point3D { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
-    }
-
-    fn add(self, rhs: Vector3D) -> Self::Output {
         Point3D { x: self.x + rhs.x, y: self.y + rhs.y, z: self.z + rhs.z }
     }
 }
