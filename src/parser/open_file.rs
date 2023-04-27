@@ -5,25 +5,34 @@
 // open_file
 //
 
-use crate::types::camera::Camera;
+use crate::types::{camera::Camera, traits::Hitable};
 use crate::types::vector::Vector3D;
+use crate::types::sphere::Sphere;
 
 use std::io::Read;
 use std::error;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Default, Deserialize)]
 pub struct Light {
     pub pos : Vector3D,
     pub angle : f32,
 }
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct Scene {
     pub lights : Vec<Light>,
     pub camera : Camera,
+    pub primitives : Vec<Box<dyn Hitable>>,
 }
 
-pub fn parse_file(file_path: &String)-> Result<(), Box<dyn error::Error>>
+#[derive(Default, Deserialize)]
+pub struct Parser {
+    pub lights : Vec<Light>,
+    pub camera : Camera,
+    pub spheres : Vec<Sphere>,
+}
+
+pub fn parse_file(file_path: &String)-> Result<Scene, Box<dyn error::Error>>
 {
     let path = file_path;
     let mut file = std::fs::File::open(path).map_err(|error| {
@@ -36,9 +45,10 @@ pub fn parse_file(file_path: &String)-> Result<(), Box<dyn error::Error>>
     })?;
 
     let data: &str = &content;
-    let scene : Scene = serde_json::from_str(data).map_err(|error| {
+    let parser : Parser = serde_json::from_str(data).map_err(|error| {
         format!("Failed to convert light : {}", error)
     })?;
+    let scene : Scene = Scene::default();
     println!("pos.x = {} angle = {}", scene.lights[0].pos.x, scene.lights[0].angle);
-    Ok(())
+    Ok(scene)
 }
