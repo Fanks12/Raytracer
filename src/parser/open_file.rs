@@ -11,7 +11,6 @@ use crate::types::sphere::Sphere;
 
 use std::io::Read;
 use std::error;
-use std::sync::Arc;
 use serde::Deserialize;
 
 #[derive(Default, Deserialize)]
@@ -37,9 +36,8 @@ impl Scene {
     pub fn create_from_parser(parser : Parser) -> Self
     {
         let mut vect : Vec<Box<dyn Hitable>> = Vec::default();
-        let mut iterator = parser.spheres.iter();
-        while let Some(element) = iterator.next() {
-            vect.push(Box::new(*element));
+        for val in parser.spheres.iter() {
+            vect.push(Box::new(*val));
         }
         Self { lights: (parser.lights), camera: (parser.camera),
         primitives: (vect) }
