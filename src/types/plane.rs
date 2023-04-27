@@ -16,19 +16,14 @@ impl Hitable for Plane {
         let diffa: f64 = a - self.padding;
         let diffb: f64 = b - self.padding;
 
-        diffa.abs() > diffb.abs()
+        diffa.abs() >= diffb.abs()
     }
 }
 
 impl Plane {
     fn intersect_point(&self, ray: Ray) -> Point3D {
-        //let copy: Ray = ray;
         if self.hits(ray) {
             let ratio: f64 = (self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
-            // x = ray.origin.x + ray.direction.x * ratio
-            // y = ray.origin.y + ray.direction.y * ratio
-            // z = ray.origin.z + ray.direction.z * ratio
-            // ou
             ray.origin + ray.direction * ratio
         } else {
             Point3D { x: 0.0, y: 0.0, z: 0.0 }
