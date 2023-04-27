@@ -11,6 +11,7 @@ use crate::types::sphere::Sphere;
 
 use std::io::Read;
 use std::error;
+use std::sync::Arc;
 use serde::Deserialize;
 
 #[derive(Default, Deserialize)]
@@ -32,6 +33,19 @@ pub struct Parser {
     pub spheres : Vec<Sphere>,
 }
 
+impl Scene {
+    pub fn create_from_parser(parser : Parser) -> Self
+    {
+        let mut vect : Vec<Box<dyn Hitable>> = Vec::default();
+        let mut iterator = parser.spheres.iter();
+        while let Some(element) = iterator.next() {
+            vect.push(Box::new(*element));
+        }
+        Self { lights: (parser.lights), camera: (parser.camera),
+        primitives: (vect) }
+    }
+}
+
 pub fn parse_file(file_path: &String)-> Result<Scene, Box<dyn error::Error>>
 {
     let path = file_path;
@@ -48,7 +62,7 @@ pub fn parse_file(file_path: &String)-> Result<Scene, Box<dyn error::Error>>
     let parser : Parser = serde_json::from_str(data).map_err(|error| {
         format!("Failed to convert light : {}", error)
     })?;
-    let scene : Scene = Scene::default();
+    let scene : Scene = Scene::create_from_parser(parser);
     println!("pos.x = {} angle = {}", scene.lights[0].pos.x, scene.lights[0].angle);
     Ok(scene)
 }

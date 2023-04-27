@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn error::Error>>
     }
     let result = parse_file(&args[1]);
     match result {
-        Ok(_) => raytrace(),
+        Ok(_) => raytrace(result.unwrap()),
         Err(err) => return Err(err),
     }
 }
