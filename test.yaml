@@ -1,0 +1,6 @@
+- testlight:
+    pos:
+      x: 5
+      y: 4
+      z: 3
+    angle: 43

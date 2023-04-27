@@ -2,6 +2,9 @@ use crate::types::point::Point3D;
 use crate::types::ray::Ray;
 use crate::types::traits::Hitable;
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Default, Serialize, Deserialize)]
 pub struct Sphere {
     pub center: Point3D,
     pub radius: f64,

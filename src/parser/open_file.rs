@@ -5,20 +5,23 @@
 // open_file
 //
 
-// use crate::types::camera::Camera;
+use crate::types::camera::Camera;
 use crate::types::vector::Vector3D;
+
 use std::io::Read;
-use serde::{Deserialize, Serialize};
 use std::error;
-// use crate::types::traits::Hitable;
+use serde::{Deserialize, Serialize};
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct Light {
     pub pos : Vector3D,
     pub angle : f32,
 }
-
-// , prims : &Vec<Box<dyn Hitable>>, lights: &Vec<Light>
+#[derive(Default, Serialize, Deserialize)]
+pub struct Scene {
+    pub lights : Vec<Light>,
+    pub camera : Camera,
+}
 
 pub fn parse_file(file_path: &String)-> Result<(), Box<dyn error::Error>>
 {
@@ -33,9 +36,9 @@ pub fn parse_file(file_path: &String)-> Result<(), Box<dyn error::Error>>
     })?;
 
     let data: &str = &content;
-    let light : Light = serde_json::from_str(data).map_err(|error| {
+    let scene : Scene = serde_json::from_str(data).map_err(|error| {
         format!("Failed to convert light : {}", error)
     })?;
-    println!("pos.x = {} angle = {}", light.pos.x, light.angle);
+    println!("pos.x = {} angle = {}", scene.lights[0].pos.x, scene.lights[0].angle);
     Ok(())
 }
