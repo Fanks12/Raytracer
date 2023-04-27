@@ -16,4 +16,17 @@ impl Hitable for Sphere {
 
         d >= 0.0
     }
+    fn intersect_point(&self, ray: Ray) -> Vec<Point3D> {
+        let tab = Vec::new();
+        // if d == 0.0 {
+        //     let t: f64 = -b / 2 * a
+        //     tab.push(Point3D { x: ray.origin.x + ray.direction.x * t, y: ray.origin.y + ray.direction.y * t, z: ray.origin.z + ray.direction.z * t});
+        // } else if d > 0.0 {
+        //     let tun: f64 = -b + d.sqrt() / 2 * a
+        //     let tdeux: f64 = -b - d.sqrt() / 2 * a
+        //     tab.push(Point3D { x: ray.origin.x + ray.direction.x * tun, y: ray.origin.y + ray.direction.y * tun, z: ray.origin.z + ray.direction.z * tun});
+        //     tab.push(Point3D { x: ray.origin.x + ray.direction.x * tdeux, y: ray.origin.y + ray.direction.y * tdeux, z: ray.origin.z + ray.direction.z * tdeux});
+        // }
+        tab
+    }
 }
