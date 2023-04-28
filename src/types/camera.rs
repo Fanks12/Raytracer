@@ -1,9 +1,9 @@
 use crate::types::point::Point3D;
 use crate::types::ray::Ray;
 use crate::types::rectangle::Rectangle3D;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Default, Deserialize)]
 pub struct Camera {
     pub origin: Point3D,
     pub screen: Rectangle3D,

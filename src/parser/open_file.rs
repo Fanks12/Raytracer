@@ -5,6 +5,8 @@
 // open_file
 //
 
+use crate::types::point::Point3D;
+use crate::types::rectangle::Rectangle3D;
 use crate::types::{camera::Camera, traits::Hitable};
 use crate::types::vector::Vector3D;
 use crate::types::sphere::Sphere;
@@ -18,11 +20,29 @@ pub struct Light {
     pub pos : Vector3D,
     pub angle : f32,
 }
+
+#[derive(Default, Deserialize)]
+pub struct Resolution {
+    pub height : i64,
+    pub width : i64,
+}
+
+#[derive(Default, Deserialize)]
+pub struct CamConfig {
+    pub position : Point3D,
+    pub rotation : Point3D,
+    pub field_of_view_vert : f32,
+    pub field_of_view_hori : f32,
+    pub resolution : Resolution,
+}
+
 #[derive(Default)]
 pub struct Scene {
     pub lights : Vec<Light>,
     pub camera : Camera,
     pub primitives : Vec<Box<dyn Hitable>>,
+    pub rectangle : Rectangle3D,
+    pub resolution : Resolution,
 }
 
 #[derive(Default, Deserialize)]
@@ -30,6 +50,14 @@ pub struct Parser {
     pub lights : Vec<Light>,
     pub camera : Camera,
     pub spheres : Vec<Sphere>,
+    pub cam_config : CamConfig,
+}
+
+impl CamConfig {
+    pub fn convert_cam_config(&self) -> Rectangle3D
+    {
+        Rectangle3D::default()
+    }
 }
 
 impl Scene {
@@ -40,7 +68,8 @@ impl Scene {
             vect.push(Box::new(*val));
         }
         Self { lights: (parser.lights), camera: (parser.camera),
-        primitives: (vect) }
+        primitives: (vect) , rectangle: CamConfig::convert_cam_config(&parser.cam_config),
+        resolution : parser.cam_config.resolution}
     }
 }
 
