@@ -2,14 +2,15 @@ mod core;
 mod opts;
 mod types;
 
+use std::error;
 use crate::core::tracer::raytrace;
 use crate::opts::check_opts;
 use crate::opts::OptsResult;
 
-fn main() {
+fn main() -> Result<(), Box<dyn error::Error>> {
     match check_opts() {
         OptsResult::Ok(opts_args) => {
-            raytrace();
+            return raytrace();
         }
         OptsResult::Help => {
             std::process::exit(0);
