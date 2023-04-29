@@ -15,13 +15,13 @@ fn main() -> Result<(), Box<dyn error::Error>>
         std::process::exit(84);
     }
     if args[1] == "--help" {
-        return print_help(&args[0])
+        print_help(&args[0]);
+        return Ok(())
     }
     raytrace()
 }
 
-fn print_help(binary: &String) -> Result<(), Box<dyn error::Error>> {
+fn print_help(binary: &String) {
     println!("USAGE: {} <SCENE_FILE>", binary);
     println!("\tSCENE_FILE: scene configuration");
-    Ok(())
 }
