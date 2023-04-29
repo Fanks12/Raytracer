@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use serde::Deserialize;
-use crate::types::vector::Vector3D;
+use crate::types::base::vector::Vector3D;
 
 #[derive(Clone, Copy, Deserialize)]
 pub enum AxisEnum {
@@ -9,7 +9,7 @@ pub enum AxisEnum {
     Z,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Deserialize)]
 pub struct Point3D {
     pub x: f64,
     pub y: f64,

@@ -1,16 +1,15 @@
 mod core;
-mod opts;
 mod types;
 
-use crate::core::tracer::raytrace;
-use crate::opts::check_opts;
-use crate::opts::OptsResult;
 use std::error;
+use crate::core::options::{check_opts, OptsResult};
+
+use crate::core::tracer::raytrace;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     match check_opts() {
         OptsResult::Ok(opts_args) => {
-            raytrace()
+            raytrace(opts_args)
         }
         OptsResult::Help => {
             Ok(())

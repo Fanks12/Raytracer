@@ -1,41 +1,35 @@
-use crate::types::camera::Camera;
-use crate::types::point::{AxisEnum, Point3D};
-use crate::types::rectangle::Rectangle3D;
-use crate::types::traits::Hitable;
-use crate::types::vector::Vector3D;
 use std::error;
-use crate::types::primitives::plane::Plane;
-use crate::types::primitives::sphere::Sphere;
+use crate::core::options::OptsArgs;
+use crate::core::parser::parse_file;
+use crate::types::config::scene::Scene;
 
-pub fn raytrace() -> Result<(), Box<dyn error::Error>>
-{
-    let eye: Point3D = Point3D { x: 0.0, y: 0.0, z: -5.0 };
-    let screen_origin: Point3D = Point3D { x: -5.0, y: -5.0, z: 0.0 };
-    let screen_left: Vector3D = Vector3D { x: 10.0, y: 0.0, z: 0.0 };
-    let screen_bottom: Vector3D = Vector3D { x: 0.0, y: 10.0, z: 0.0 };
-    let sphere_center: Point3D = Point3D { x: 0.0, y: 2.0, z: 5.0 };
-    let screen: Rectangle3D = Rectangle3D { origin: screen_origin, bottom_side: screen_bottom, left_side: screen_left };
-    let camera: Camera = Camera { origin: eye, screen };
-    let element: Sphere = Sphere { center: sphere_center, radius: 5.0 };
-    let plan: Plane = Plane { axis: AxisEnum::X, padding: 5.0 };
+pub fn raytrace(options: OptsArgs) -> Result<(), Box<dyn error::Error>> {
+    let result = parse_file(&options.scene_file);
+    match result {
+        Ok(_) => exec_raytracing(result.unwrap()),
+        Err(err) => return Err(err),
+    }
+}
 
-    let points_x = 60;
-    let points_y = 20;
+fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
+    let points_x = scene.resolution.width;
+    let points_y = scene.resolution.height;
     let mut output: Vec<char> = Vec::with_capacity(points_x * (points_y + 1));
 
-    for y in 1..points_y {
-        for x in 1..points_x {
+    for y in 0..points_y {
+        if y > 0 {
+            output.push('\n');
+        }
+
+        for x in 0..points_x {
             let xf = x as f64 / points_x as f64;
             let yf = y as f64 / points_y as f64;
-            if element.hits(camera.ray(xf, yf)) {
-                output.push('0');
-            }else if plan.hits(camera.ray(xf, yf)) {
-                output.push('=');
-            } else {
+            if scene.primitives[0].hits(scene.camera.ray(xf, yf)) {
                 output.push(' ');
+            } else {
+                output.push('#');
             }
         }
-        output.push('\n');
     }
 
     let out: String = output.iter().collect();
