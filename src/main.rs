@@ -2,10 +2,10 @@ mod core;
 mod opts;
 mod types;
 
-use std::error;
 use crate::core::tracer::raytrace;
 use crate::opts::check_opts;
 use crate::opts::OptsResult;
+use std::error;
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     match check_opts() {
@@ -13,9 +13,10 @@ fn main() -> Result<(), Box<dyn error::Error>> {
             return raytrace();
         }
         OptsResult::Help => {
-            std::process::exit(0);
+            return Ok(());
         }
         OptsResult::Err => {
+            // TODO: Fix error catch and return 84
             std::process::exit(84);
         }
     }

@@ -21,7 +21,7 @@ fn print_usage(program: &str, opts: Options) {
 
 fn create_options() -> Options {
     let mut opts = Options::new();
-    opts.optopt("", "external", "save output in a file instead of using graphical", "<file>");
+    opts.optopt("", "export", "save output in a file instead of using graphical", "<file>");
     opts.optflag("h", "help", "print this help menu");
     opts
 }
@@ -47,5 +47,5 @@ pub fn check_opts() -> OptsResult<OptsArgs> {
         print_usage(&program, opts);
         return OptsResult::Help
     };
-    OptsResult::Ok(OptsArgs{ scene_file: scene_file, external_file: matches.opt_str("external") })
+    OptsResult::Ok(OptsArgs{ scene_file, external_file: matches.opt_str("export") })
 }
