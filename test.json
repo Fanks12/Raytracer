@@ -17,39 +17,6 @@
         }
     ],
     "camera" : {
-        "origin" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : -5
-        },
-        "screen" : {
-            "origin" : {
-                "x" : -5,
-                "y" : -5,
-                "z" : 0
-            },
-            "bottom_side" : {
-                "x" : 0,
-                "y" : 10,
-                "z" : 0
-            },
-            "left_side" : {
-                "x" : 10,
-                "y" : 0,
-                "z" : 0
-            }
-        }
-    },
-    "spheres" : [ {
-        "radius" : 5,
-        "center" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-            }
-        }
-    ],
-    "cam_config" : {
         "resolution" : {
             "height" : 1080,
             "width" : 1920
@@ -66,5 +33,14 @@
             "y" : 0,
             "z" : 0
         }
-    }
+    },
+    "spheres" : [ {
+        "radius" : 5,
+        "center" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+            }
+        }
+    ],
 }

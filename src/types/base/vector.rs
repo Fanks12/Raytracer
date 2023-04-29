@@ -1,9 +1,8 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
-use crate::types::point::AxisEnum;
+use serde::Deserialize;
+use crate::types::base::point::AxisEnum;
 
-use serde::{Deserialize, Serialize};
-
-#[derive(Clone, Copy, Serialize, Deserialize)]
+#[derive(Clone, Copy, Deserialize)]
 pub struct Vector3D {
     pub x: f64,
     pub y: f64,

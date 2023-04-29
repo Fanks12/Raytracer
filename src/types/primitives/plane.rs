@@ -1,7 +1,7 @@
-use crate::types::point::{AxisEnum, Point3D};
-use crate::types::ray::Ray;
-use crate::types::traits::Hitable;
 use serde::Deserialize;
+use crate::types::base::point::{AxisEnum, Point3D};
+use crate::types::primitives::Primitive;
+use crate::types::ray::Ray;
 
 #[derive(Deserialize, Copy, Clone)]
 pub struct Plane {
@@ -9,7 +9,7 @@ pub struct Plane {
     pub padding :f64,
 }
 
-impl Hitable for Plane {
+impl Primitive for Plane {
     fn hits(&self, ray: Ray) -> bool {
         let a: f64 = ray.origin.axis_value(self.axis);
         let b: f64 =  ray.origin.axis_value(self.axis) + ray.direction.axis_value(self.axis);

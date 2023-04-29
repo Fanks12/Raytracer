@@ -1,7 +1,6 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 use serde::Deserialize;
-use crate::types::vector::Vector3D;
-use serde::{Deserialize, Serialize};
+use crate::types::base::vector::Vector3D;
 
 #[derive(Clone, Copy, Deserialize)]
 pub enum AxisEnum {

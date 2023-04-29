@@ -1,10 +1,19 @@
-use crate::types::vector::Vector3D;
-use crate::parser::open_file::Scene;
 use std::error;
+use crate::core::options::OptsArgs;
+use crate::core::parser::parse_file;
+use crate::types::config::scene::Scene;
 
-pub fn raytrace(scene : Scene) -> Result<(), Box<dyn error::Error>> {
-    let points_x = 60;
-    let points_y = 20;
+pub fn raytrace(options: OptsArgs) -> Result<(), Box<dyn error::Error>> {
+    let result = parse_file(&options.scene_file);
+    match result {
+        Ok(_) => exec_raytracing(result.unwrap()),
+        Err(err) => return Err(err),
+    }
+}
+
+fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
+    let points_x = scene.resolution.width;
+    let points_y = scene.resolution.height;
     let mut output: Vec<char> = Vec::with_capacity(points_x * (points_y + 1));
 
     for y in 1..points_y {
