@@ -1,33 +1,24 @@
 mod core;
-mod types;
+mod opts;
 mod parser;
-
-use std::env;
-use std::error;
+mod types;
 
 use crate::core::tracer::raytrace;
-use crate::parser::open_file::parse_file;
+use crate::opts::check_opts;
+use crate::opts::OptsResult;
+use std::error;
 
-fn main() -> Result<(), Box<dyn error::Error>>
-{
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() != 2 {
-        eprintln!("Error: Number of arguments");
-        std::process::exit(84);
+fn main() -> Result<(), Box<dyn error::Error>> {
+    match check_opts() {
+        OptsResult::Ok(opts_args) => {
+            raytrace()
+        }
+        OptsResult::Help => {
+            Ok(())
+        }
+        OptsResult::Err => {
+            // TODO: Fix error catch and return 84
+            std::process::exit(84);
+        }
     }
-    if args[1] == "--help" {
-        return print_help(&args[0])
-    }
-    let result = parse_file(&args[1]);
-    match result {
-        Ok(_) => raytrace(result.unwrap()),
-        Err(err) => return Err(err),
-    }
-}
-
-fn print_help(binary: &String) -> Result<(), Box<dyn error::Error>> {
-    println!("USAGE: {} <SCENE_FILE>", binary);
-    println!("\tSCENE_FILE: scene configuration");
-    Ok(())
 }

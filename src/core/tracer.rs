@@ -1,4 +1,4 @@
-
+use crate::types::vector::Vector3D;
 use crate::parser::open_file::Scene;
 use std::error;
 

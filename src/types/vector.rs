@@ -1,4 +1,5 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
+use crate::types::point::AxisEnum;
 
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +17,14 @@ impl Vector3D {
 
     pub fn length(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
+    }
+
+    pub fn axis_value(&self, axis: AxisEnum) -> f64 {
+        match axis {
+            AxisEnum::X => self.x,
+            AxisEnum::Y => self.y,
+            AxisEnum::Z => self.z,
+        }
     }
 }
 
