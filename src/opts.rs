@@ -1,5 +1,3 @@
-extern crate getopts;
-
 use getopts::Options;
 use std::env;
 
@@ -33,7 +31,7 @@ pub fn check_opts() -> OptsResult<OptsArgs> {
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m }
         Err(f) => {
-            eprintln!("Error: {}", f.to_string());
+            eprintln!("Error: {}", f);
             return OptsResult::Err
         }
     };

@@ -10,10 +10,10 @@ use std::error;
 fn main() -> Result<(), Box<dyn error::Error>> {
     match check_opts() {
         OptsResult::Ok(opts_args) => {
-            return raytrace();
+            raytrace()
         }
         OptsResult::Help => {
-            return Ok(());
+            Ok(())
         }
         OptsResult::Err => {
             // TODO: Fix error catch and return 84

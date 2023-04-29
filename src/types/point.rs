@@ -1,5 +1,13 @@
 use std::ops::{Add, AddAssign, Sub, SubAssign};
+use serde::Deserialize;
 use crate::types::vector::Vector3D;
+
+#[derive(Clone, Copy, Deserialize)]
+pub enum AxisEnum {
+    X,
+    Y,
+    Z,
+}
 
 #[derive(Clone, Copy)]
 pub struct Point3D {
@@ -11,6 +19,14 @@ pub struct Point3D {
 impl Point3D {
     pub fn to_vec(self) -> Vector3D {
         Vector3D { x: self.x, y: self.y, z: self.z }
+    }
+
+    pub fn axis_value(&self, axis: AxisEnum) -> f64 {
+        match axis {
+            AxisEnum::X => self.x,
+            AxisEnum::Y => self.y,
+            AxisEnum::Z => self.z,
+        }
     }
 }
 
