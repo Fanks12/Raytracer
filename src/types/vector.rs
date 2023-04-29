@@ -1,4 +1,5 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
+use crate::types::point::AxisEnum;
 
 #[derive(Clone, Copy)]
 pub struct Vector3D {
@@ -16,12 +17,11 @@ impl Vector3D {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
-    pub fn axis_value(&self, c: char) -> f64 {
-        match c {
-            'X' => self.x,
-            'Y' => self.y,
-            'Z' => self.z,
-            _ => 0.0,
+    pub fn axis_value(&self, axis: AxisEnum) -> f64 {
+        match axis {
+            AxisEnum::X => self.x,
+            AxisEnum::Y => self.y,
+            AxisEnum::Z => self.z,
         }
     }
 }

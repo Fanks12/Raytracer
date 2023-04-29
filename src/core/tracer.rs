@@ -1,11 +1,11 @@
 use crate::types::camera::Camera;
-use crate::types::point::Point3D;
+use crate::types::point::{AxisEnum, Point3D};
 use crate::types::rectangle::Rectangle3D;
-use crate::types::sphere::Sphere;
-use crate::types::plane::Plane;
 use crate::types::traits::Hitable;
 use crate::types::vector::Vector3D;
 use std::error;
+use crate::types::primitives::plane::Plane;
+use crate::types::primitives::sphere::Sphere;
 
 pub fn raytrace() -> Result<(), Box<dyn error::Error>>
 {
@@ -17,7 +17,7 @@ pub fn raytrace() -> Result<(), Box<dyn error::Error>>
     let screen: Rectangle3D = Rectangle3D { origin: screen_origin, bottom_side: screen_bottom, left_side: screen_left };
     let camera: Camera = Camera { origin: eye, screen };
     let element: Sphere = Sphere { center: sphere_center, radius: 5.0 };
-    let plan: Plane = Plane { axis: 'X', padding: 5.0 };
+    let plan: Plane = Plane { axis: AxisEnum::X, padding: 5.0 };
 
     let points_x = 60;
     let points_y = 20;

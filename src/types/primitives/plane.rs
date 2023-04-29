@@ -1,11 +1,11 @@
-use crate::types::point::Point3D;
+use crate::types::point::{AxisEnum, Point3D};
 use crate::types::ray::Ray;
 use crate::types::traits::Hitable;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Default, Serialize, Deserialize, Copy, Clone)]
+#[derive(Deserialize, Copy, Clone)]
 pub struct Plane {
-    pub axis: char,
+    pub axis: AxisEnum,
     pub padding :f64,
 }
 
@@ -25,5 +25,11 @@ impl Hitable for Plane {
             tab.push(ray.origin + ray.direction * ratio);
         }
         tab
+    }
+}
+
+impl Default for Plane {
+    fn default() -> Self {
+        Plane { axis: AxisEnum::Z, padding: 0.0 }
     }
 }
