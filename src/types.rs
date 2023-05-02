@@ -4,5 +4,6 @@ pub mod ray;
 pub mod rectangle;
 pub mod sphere;
 pub mod plane;
+pub mod color;
 pub mod traits;
 pub mod vector;
