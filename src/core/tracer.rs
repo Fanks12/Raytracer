@@ -15,7 +15,7 @@ pub fn raytrace() {
     let sphere_center: Point3D = Point3D { x: 0.0, y: 0.0, z: -10.0 };
     let screen: Rectangle3D = Rectangle3D { origin: screen_origin, bottom_side: screen_bottom, left_side: screen_left };
     let camera: Camera = Camera { origin: eye, screen };
-    let plane: Plane = Plane { axis: 'X', padding: 0.1, color: Color {red: 255, green: 0, blue: 0} };
+    let plane: Plane = Plane { axis: 'X', padding: 1.0, color: Color {red: 255, green: 0, blue: 0} };
     let sphere: Sphere = Sphere { center: sphere_center, radius: 2.0, color: Color {red: 155, green: 0, blue: 0}};
     let element: Vec<&dyn Primitives> = vec![&plane, &sphere];
 
