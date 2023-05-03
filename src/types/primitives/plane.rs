@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use crate::types::base::point::{AxisEnum, Point3D};
+use crate::types::base::point::AxisEnum;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
