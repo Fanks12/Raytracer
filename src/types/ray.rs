@@ -11,7 +11,7 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub fn first_hit(&mut self, elements: Vec<&dyn Primitives>) -> Color {
+    pub fn first_hit(&mut self, elements: &Vec<Box<dyn Primitives>>) -> Color {
         for element in elements {
             element.intersects(self);
         }
