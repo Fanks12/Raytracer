@@ -31,6 +31,24 @@ fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
             }
         }
     }
+    // for y in 0..points_y {
+    //     if y > 0 {
+    //         output.push('\n');
+    //     }
+    //     for x in 0..points_x {
+    //         let xf = x as f64 / points_x as f64;
+    //         let yf = y as f64 / points_y as f64;
+    //         let color = scene.camera.ray(xf, yf).first_hit(scene.primitive element.clone());
+
+    //         if color.red == 255 {
+    //             output.push('=');
+    //         } else if color.red == 155 {
+    //             output.push('O');
+    //         } else {
+    //             output.push(' ');
+    //         }
+    //     }
+    // }
 
     let out: String = output.iter().collect();
     println!("{}", out);
