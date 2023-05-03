@@ -15,6 +15,7 @@ impl Camera {
         Ray {
             origin: self.origin,
             direction: (self.screen.point_at(x, y) - self.origin).to_vec(),
+            hits: Vec::new(),
         }
     }
 }
