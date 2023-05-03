@@ -28,6 +28,10 @@ impl Point3D {
             AxisEnum::Z => self.z,
         }
     }
+
+    pub fn dist(&self, point: Point3D) -> f64 {
+        ((point.x - self.x).powi(2) + (point.y - self.y).powi(2) + (point.z - self.z).powi(2)).sqrt()
+    }
 }
 
 impl Default for Point3D {

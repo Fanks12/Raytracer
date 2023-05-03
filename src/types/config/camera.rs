@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::types::base::point::Point3D;
 use crate::types::config::Resolution;
-use crate::types::ray::Ray;
+use crate::types::base::ray::Ray;
 use crate::types::rectangle::Rectangle3D;
 
 #[derive(Default)]
