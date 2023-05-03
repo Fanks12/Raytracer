@@ -1,4 +1,3 @@
-use crate::types::base::point::Point3D;
 use crate::types::base::ray::Ray;
 
 pub mod plane;
