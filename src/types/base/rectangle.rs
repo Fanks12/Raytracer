@@ -5,7 +5,7 @@ use crate::types::base::vector::Vector3D;
 #[derive(Default, Deserialize)]
 pub struct Rectangle3D {
     pub origin: Point3D,
-    pub bottom_side: Vector3D,
+    pub top_side: Vector3D,
     pub left_side: Vector3D,
 }
 
