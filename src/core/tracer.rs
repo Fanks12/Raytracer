@@ -40,9 +40,9 @@ fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
             let yf = y as f64 / points_y as f64;
             let color = scene.camera.ray(xf, yf).first_hit(&scene.primitives);
 
-            if color.red == 255 {
+            if color.r == 255 {
                 output.push('=');
-            } else if color.red == 155 {
+            } else if color.r == 155 {
                 output.push('O');
             } else {
                 output.push(' ');

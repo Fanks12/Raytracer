@@ -26,6 +26,6 @@ impl Primitive for Plane {
 
 impl Default for Plane {
     fn default() -> Self {
-        Plane { axis: AxisEnum::Z, padding: 0.0, ..Default::default() }
+        Plane { axis: AxisEnum::Z, padding: 0.0, color: Default::default() }
     }
 }

@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Write;
-use crate::types::config::Color;
+use crate::types::base::color::Color;
 
 fn write_ppm_file(file_name: &String, width: usize, height: usize, colors: Vec<Color>) -> std::io::Result<()> {
     let mut file = File::create(file_name.clone() + ".ppm")?;
