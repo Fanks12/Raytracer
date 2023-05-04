@@ -16,18 +16,36 @@ fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
     let points_y = scene.resolution.height;
     let mut output: Vec<char> = Vec::with_capacity(points_x * (points_y + 1));
 
+    // for y in 0..points_y {
+    //     if y > 0 {
+    //         output.push('\n');
+    //     }
+
+    //     for x in 0..points_x {
+    //         let xf = x as f64 / points_x as f64;
+    //         let yf = y as f64 / points_y as f64;
+    //         if scene.primitives[0].hits(scene.camera.ray(xf, yf)) {
+    //             output.push(' ');
+    //         } else {
+    //             output.push('#');
+    //         }
+    //     }
+    // }
     for y in 0..points_y {
         if y > 0 {
             output.push('\n');
         }
-
         for x in 0..points_x {
             let xf = x as f64 / points_x as f64;
             let yf = y as f64 / points_y as f64;
-            if scene.primitives[0].hits(scene.camera.ray(xf, yf)) {
-                output.push(' ');
+            let color = scene.camera.ray(xf, yf).first_hit(&scene.primitives);
+
+            if color.r == 255 {
+                output.push('=');
+            } else if color.r == 155 {
+                output.push('O');
             } else {
-                output.push('#');
+                output.push(' ');
             }
         }
     }

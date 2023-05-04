@@ -1,8 +1,8 @@
 use serde::Deserialize;
 use crate::types::base::point::Point3D;
 use crate::types::config::Resolution;
-use crate::types::ray::Ray;
-use crate::types::rectangle::Rectangle3D;
+use crate::types::base::ray::Ray;
+use crate::types::base::rectangle::Rectangle3D;
 
 #[derive(Default)]
 pub struct Camera {
@@ -15,6 +15,7 @@ impl Camera {
         Ray {
             origin: self.origin,
             direction: (self.screen.point_at(x, y) - self.origin).to_vec(),
+            hits: Vec::new(),
         }
     }
 }
