@@ -5,6 +5,8 @@ use std::thread;
 use std::thread::JoinHandle;
 
 pub struct Renderer {
+    num_threads: usize,
+    countdown: Arc<(Mutex<usize>, Condvar)>,
     threads: Vec<Arc<(Mutex<bool>, Condvar)>>,
     handles: Vec<JoinHandle<()>>,
     pub colors: Vec<Color>
@@ -12,42 +14,74 @@ pub struct Renderer {
 
 impl Renderer {
     pub fn new(scene: &Scene) -> Self {
-        let number_of_threads: usize = thread::available_parallelism().unwrap().get();
-        let mut threads: Vec<Arc<(Mutex<bool>, Condvar)>> = Vec::with_capacity(number_of_threads);
-        let mut handles: Vec<JoinHandle<()>> = Vec::with_capacity(number_of_threads);
-
-        Renderer::create_threads(number_of_threads, &mut threads, &mut handles);
-
-        Self { colors: Vec::with_capacity(scene.resolution.width * scene.resolution.height), threads: threads, handles: handles }
+        let num_threads = thread::available_parallelism().unwrap().get();
+        let mut renderer = Self {
+            num_threads: num_threads,
+            countdown: Arc::new((Mutex::new(0), Condvar::new())),
+            threads: Vec::with_capacity(num_threads),
+            handles: Vec::with_capacity(num_threads),
+            colors: Vec::with_capacity(scene.resolution.width * scene.resolution.height)
+        };
+        renderer.create_threads();
+        renderer
     }
 
-    fn create_threads(number_of_threads:usize, threads: &mut Vec<Arc<(Mutex<bool>, Condvar)>>, handles: &mut Vec<JoinHandle<()>>) {
-        for i in 0..number_of_threads {
+    fn create_threads(&mut self) {
+        let wait_start = Arc::new((Mutex::new(self.num_threads), Condvar::new()));
+        let (mutex_wait, cvar_wait) = &*wait_start;
+        let remaining = mutex_wait.lock().unwrap();
+
+        for i in 0..self.num_threads {
             let arc = Arc::new((Mutex::new(true), Condvar::new()));
             let arc_thread = arc.clone();
             let thread_id = i;
-            let num_threads = threads.len();
+            let num_threads = self.threads.len();
+            let countdown = self.countdown.clone();
+            let wait_start_thread = wait_start.clone();
 
-            threads.push(arc);
+            self.threads.push(arc);
             let handle = thread::spawn(move || {
                 let (mutex, cvar) = &*arc_thread;
 
                 loop {
                     let mut running = mutex.lock().unwrap();
+                    {
+                        let (mutex_wait, cvar_wait) = &*wait_start_thread;
+                        let mut remaining = mutex_wait.lock().unwrap();
+                        *remaining -= 1;
+                        if *remaining == 0 {
+                            cvar_wait.notify_one();
+                        }
+                    }
                     running = cvar.wait(running).unwrap();
                     if !*running {
                         break;
                     }
-                    println!("thread_id: {} number_of_threads: {}", thread_id, num_threads);
+
+                    println!("thread_id: {} num_threads: {}", thread_id, num_threads);
+
+                    let (mutex_count, cvar_count) = &*countdown;
+                    let mut remaining = mutex_count.lock().unwrap();
+                    *remaining -= 1;
+                    if *remaining == 0 {
+                        cvar_count.notify_one();
+                    }
                 }
 
                 println!("Thread {} ended", thread_id);
             });
-            handles.push(handle);
+            self.handles.push(handle);
         }
+        _ = cvar_wait.wait(remaining).unwrap();
     }
 
     pub fn render(&mut self) {
+        println!("render begin");
+
+        let (mutex_count, cvar_count) = &*self.countdown;
+        let mut remaining = mutex_count.lock().unwrap();
+        *remaining = self.num_threads;
+
         self.colors.clear();
         for arc in &self.threads {
             let mutex = &arc.0;
@@ -55,10 +89,14 @@ impl Renderer {
             _ = mutex.lock().unwrap();
             cvar.notify_one();
         }
+
+        _ = cvar_count.wait(remaining).unwrap();
+
+        println!("render end");
     }
 
     pub fn terminate(&mut self) {
-        for arc in &self.threads {
+        for arc in &mut self.threads.drain(..) {
             let mutex = &arc.0;
             let cvar = &arc.1;
             let mut running = mutex.lock().unwrap();
