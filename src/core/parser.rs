@@ -7,7 +7,8 @@ use std::fmt;
 use crate::types::config::camera::CamConfig;
 use crate::types::config::Light;
 use crate::types::config::scene::Scene;
-use crate::types::primitives::sphere::Sphere;
+// use crate::types::primitives::sphere::Sphere;
+use crate::types::primitives::PrimitiveVec;
 
 
 #[derive(Debug)]
@@ -25,7 +26,7 @@ impl Error for ExtensionError {}
 pub struct Parser {
     pub lights: Vec<Light>,
     pub camera: CamConfig,
-    pub spheres: Vec<Sphere>,
+    pub primitives: PrimitiveVec,
 }
 
 pub enum FileType {

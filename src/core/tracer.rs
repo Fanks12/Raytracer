@@ -38,7 +38,7 @@ fn exec_raytracing(scene: Scene) -> Result<(), Box<dyn error::Error>> {
         for x in 0..points_x {
             let xf = x as f64 / points_x as f64;
             let yf = y as f64 / points_y as f64;
-            let color = scene.camera.ray(xf, yf).first_hit(&scene.primitives);
+            let color = scene.camera.ray(xf, yf).first_hit(&scene.primitives.0);
 
             if color.r == 255 {
                 output.push('=');
