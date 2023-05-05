@@ -3,7 +3,6 @@ use crate::types::primitives::sphere::Sphere;
 
 use serde::Deserialize;
 use std::fmt;
-use std::marker::PhantomData;
 use self::plane::Plane;
 
 pub mod plane;
@@ -22,56 +21,54 @@ enum PrimitiveType {
     Plane,
 }
 
-struct PrimitiveVecVisitor {
-    phantom: PhantomData<PrimitiveType>,
-}
-
-impl<'de> serde::de::Visitor<'de> for PrimitiveVecVisitor {
-    type Value = PrimitiveVec;
-
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("struct PrimitiveVec")
-    }
-
-    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
-    where
-        A: serde::de::SeqAccess<'de>,
-    {
-        let mut primitives = Vec::new();
-        while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
-            let primitive = match typ {
-                PrimitiveType::Sphere => {
-                    let sphere: Sphere;
-                    match serde_yaml::from_value(data) {
-                        Ok(obj) => sphere = obj,
-                        Err(err) => {
-                            return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
-                        }
-                    }
-                    Box::new(sphere) as Box<dyn Primitive>
-                },
-                PrimitiveType::Plane => {
-                    let plane : Plane;
-                    match serde_yaml::from_value(data) {
-                        Ok(obj) => plane = obj,
-                        Err(err) => {
-                            return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
-                        }
-                    }
-                    Box::new(plane) as Box<dyn Primitive>
-                },
-            };
-            primitives.push(primitive);
-        }
-        Ok(PrimitiveVec(primitives))
-    }
-}
-
 impl<'de> serde::Deserialize<'de> for PrimitiveVec {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
-        deserializer.deserialize_seq(PrimitiveVecVisitor { phantom: PhantomData })
+        struct PrimitiveVecVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for PrimitiveVecVisitor {
+            type Value = PrimitiveVec;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct PrimitiveVec")
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut primitives = Vec::new();
+                while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
+                    let primitive = match typ {
+                        PrimitiveType::Sphere => {
+                            let sphere: Sphere;
+                            match serde_yaml::from_value(data) {
+                                Ok(obj) => sphere = obj,
+                                Err(err) => {
+                                    return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
+                                }
+                            }
+                            Box::new(sphere) as Box<dyn Primitive>
+                        },
+                        PrimitiveType::Plane => {
+                            let plane : Plane;
+                            match serde_yaml::from_value(data) {
+                                Ok(obj) => plane = obj,
+                                Err(err) => {
+                                    return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
+                                }
+                            }
+                            Box::new(plane) as Box<dyn Primitive>
+                        },
+                    };
+                    primitives.push(primitive);
+                }
+                Ok(PrimitiveVec(primitives))
+            }
+        }
+
+        deserializer.deserialize_seq(PrimitiveVecVisitor)
     }
 }
