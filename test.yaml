@@ -35,3 +35,11 @@ primitives:
       r: 0
       g: 1
       b: 0
+- - Plane
+  -
+    axis: X
+    padding: -5
+    color:
+      r: 255
+      g: 0
+      b: 0

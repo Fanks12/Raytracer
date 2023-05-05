@@ -1,9 +1,9 @@
 use crate::types::base::ray::Ray;
-use crate::types::primitives::sphere::Sphere;
+use self::plane::Plane;
+use self::sphere::Sphere;
 
 use serde::Deserialize;
 use std::fmt;
-use self::plane::Plane;
 
 pub mod plane;
 pub mod sphere;
@@ -32,7 +32,7 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
             type Value = PrimitiveVec;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("struct PrimitiveVec")
+                formatter.write_str("A struct PrimitiveVec")
             }
 
             fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
