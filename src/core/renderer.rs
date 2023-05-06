@@ -129,6 +129,6 @@ impl Renderer {
     pub fn get_color(&self, x: usize, y: usize) -> Color {
         let mutex = &*self.colors;
         let colors = mutex.lock().unwrap();
-        (&(*colors)[(*self.scene).resolution.height * y + x]).clone()
+        (&(*colors)[(*self.scene).resolution.width * y + x]).clone()
     }
 }
