@@ -7,14 +7,14 @@ use crate::types::primitives::Primitive;
 pub struct Scene {
     pub camera : Camera,
     pub resolution : Resolution,
-    pub primitives : Vec<Box<dyn Primitive>>,
+    pub primitives : Vec<Box<dyn Primitive + Send + Sync>>,
     pub lights : Vec<Light>,
 }
 
 impl Scene {
     pub fn create_from_parser(parser: Parser) -> Self
     {
-        let mut vect : Vec<Box<dyn Primitive>> = Vec::default();
+        let mut vect : Vec<Box<dyn Primitive + Send + Sync>> = Vec::default();
         for val in parser.spheres.iter() {
             vect.push(Box::new(*val));
         }
