@@ -7,7 +7,6 @@ use std::fmt;
 use crate::types::config::camera::CamConfig;
 use crate::types::config::Light;
 use crate::types::config::scene::Scene;
-// use crate::types::primitives::sphere::Sphere;
 use crate::types::primitives::PrimitiveVec;
 
 

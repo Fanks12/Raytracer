@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use serde_json::Error;
 use crate::types::base::point::Point3D;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;
@@ -9,6 +10,22 @@ pub struct Sphere {
     pub center: Point3D,
     pub radius: f64,
     pub color: Color,
+}
+
+impl<'de> Sphere {
+    pub fn create_sphere_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        let sphere: Sphere;
+        match serde_yaml::from_value(data) {
+            Ok(obj) => sphere = obj,
+            Err(err) => {
+                return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
+            }
+        }
+        Ok(Box::new(sphere) as Box<dyn Primitive>)
+    }
 }
 
 impl Primitive for Sphere {

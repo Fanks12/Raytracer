@@ -40,35 +40,17 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
                 A: serde::de::SeqAccess<'de>,
             {
                 let mut primitives = Vec::new();
+
                 while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
                     let primitive = match typ {
-                        PrimitiveType::Sphere => {
-                            let sphere: Sphere;
-                            match serde_yaml::from_value(data) {
-                                Ok(obj) => sphere = obj,
-                                Err(err) => {
-                                    return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
-                                }
-                            }
-                            Box::new(sphere) as Box<dyn Primitive>
-                        },
-                        PrimitiveType::Plane => {
-                            let plane : Plane;
-                            match serde_yaml::from_value(data) {
-                                Ok(obj) => plane = obj,
-                                Err(err) => {
-                                    return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
-                                }
-                            }
-                            Box::new(plane) as Box<dyn Primitive>
-                        },
+                        PrimitiveType::Sphere => Sphere::create_sphere_from_serde::<A>(data)?,
+                        PrimitiveType::Plane => Plane::create_plane_from_serde::<A>(data)?,
                     };
                     primitives.push(primitive);
                 }
                 Ok(PrimitiveVec(primitives))
             }
         }
-
         deserializer.deserialize_seq(PrimitiveVecVisitor)
     }
 }
