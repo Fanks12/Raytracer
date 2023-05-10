@@ -9,7 +9,7 @@ pub enum AxisEnum {
     Z,
 }
 
-#[derive(Clone, Copy, Deserialize, Debug)]
+#[derive(Clone, Copy, Deserialize)]
 pub struct Point3D {
     pub x: f64,
     pub y: f64,
