@@ -12,3 +12,9 @@ impl Default for Color {
         Color { r: 0, g: 0, b: 0 }
     }
 }
+
+impl Color {
+    fn sum(&self, rhs: u8) -> Color {
+        Color { r: self.r + rhs, g: self.g + rhs, b: self.b + rhs }
+    }
+}
