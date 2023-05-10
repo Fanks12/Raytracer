@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign, Div};
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 use serde::Deserialize;
 use crate::types::base::point::AxisEnum;
 

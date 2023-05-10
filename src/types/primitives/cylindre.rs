@@ -6,14 +6,14 @@ use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
 
 #[derive(Clone, Copy, Deserialize)]
-pub struct Cone {
+pub struct Cylindre {
     radius : f64,
     height : f64,
     center : Point3D,
     pub color: Color,
 }
 
-impl Cone {
+impl Cylindre {
     fn get_normalised_h(&self) -> Vector3D {
         let top_origin: Point3D = Point3D { x: self.center.x, y: self.center.y, z: self.center.z + self.height };
         let h: Vector3D = Vector3D { x: self.center.x - top_origin.x  , y: self.center.y - top_origin.y, z: self.center.z - top_origin.z };
@@ -21,7 +21,7 @@ impl Cone {
     }
 }
 
-impl Primitive for Cone {
+impl Primitive for Cylindre {
 
     fn intersects(&self, ray: &mut Ray) {
         let norm_h = self.get_normalised_h();
