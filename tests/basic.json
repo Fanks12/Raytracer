@@ -18,21 +18,21 @@
     ],
     "camera" : {
         "resolution" : {
-            "height" : 1080,
-            "width" : 1920
+            "width" : 1920,
+            "height" : 1080
         },
-        "field_of_view_vert" : 70,
-        "field_of_view_hori" : 50,
         "position" : {
             "x" : 0,
             "y" : 0,
-            "z" : 0
+            "z" : -10
         },
         "rotation" :{
             "x" : 0,
             "y" : 0,
             "z" : 0
-        }
+        },
+        "fov_horizontal" : 90,
+        "fov_vertical" : 50
     },
     "spheres" : [ {
         "radius" : 5,
@@ -40,7 +40,12 @@
             "x" : 0,
             "y" : 0,
             "z" : 0
-            }
+            },
+        "color": {
+            "r": 255,
+            "g": 0,
+            "b": 0
+        }
         }
     ]
 }
