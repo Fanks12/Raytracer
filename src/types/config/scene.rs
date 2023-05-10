@@ -14,14 +14,14 @@ pub struct Scene {
 impl Scene {
     pub fn create_from_parser(parser: Parser) -> Self
     {
-        let mut vect : Vec<Box<dyn Primitive>> = Vec::default();
+        let mut primitives : Vec<Box<dyn Primitive>> = Vec::with_capacity(parser.spheres.len());
         for val in parser.spheres.iter() {
-            vect.push(Box::new(*val));
+            primitives.push(Box::new(*val));
         }
         Self {
             camera: parser.camera.convert(),
             resolution : parser.camera.resolution,
-            primitives: (vect),
+            primitives,
             lights: (parser.lights),
         }
     }

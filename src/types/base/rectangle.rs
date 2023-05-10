@@ -11,6 +11,6 @@ pub struct Rectangle3D {
 
 impl Rectangle3D {
     pub fn point_at(&self, x: f64, y: f64) -> Point3D {
-        self.origin + self.bottom_side * x + self.left_side * y
+        self.origin + (self.top_side * x) + (self.left_side * y)
     }
 }

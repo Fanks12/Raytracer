@@ -32,12 +32,23 @@ pub struct CamConfig {
 
 impl CamConfig {
     pub fn convert(&self) -> Camera {
-        let norm = self.rotation.normalize();
-        let distance = self.position.x / (self.fov_horizontal / 2.0).tan();
-        let center = Vector3D {
-            x: self.position.x + norm.x * distance - self.position.x,
-            y: self.position.y + norm.y * distance - self.position.y,
-            z: self.position.z + norm.z * distance - self.position.z,
+        // TODO: Camera rotation
+        //let norm = self.rotation.normalize();
+        let norm = Vector3D { x: 0.0, y: 0.0, z: 1.0 };
+        let distance = self.resolution.width as f64 / (self.fov_horizontal / 2.0).tan() as f64;
+        let center = Point3D {
+            x: self.position.x + norm.x * distance - self.resolution.width as f64 / 2.0,
+            y: self.position.y + norm.y * distance - self.resolution.height as f64 / 2.0,
+            z: self.position.z + norm.z * distance,
         };
+
+        Camera {
+            origin: self.position,
+            screen: Rectangle3D {
+                origin: center,
+                top_side: Vector3D { x: self.resolution.width as f64, ..Default::default() },
+                left_side: Vector3D { y: self.resolution.height as f64, ..Default::default()}
+            }
+        }
     }
 }
