@@ -3,6 +3,7 @@ use crate::types::base::point::Point3D;
 use crate::types::config::Resolution;
 use crate::types::base::ray::Ray;
 use crate::types::base::rectangle::Rectangle3D;
+use crate::types::base::vector::Vector3D;
 
 #[derive(Default)]
 pub struct Camera {
@@ -24,14 +25,30 @@ impl Camera {
 pub struct CamConfig {
     pub position: Point3D,
     pub rotation: Point3D,
-    pub field_of_view_vert: f32,
-    pub field_of_view_hori: f32,
+    pub fov_horizontal: f32,
+    pub fov_vertical: f32,
     pub resolution: Resolution,
 }
 
 impl CamConfig {
     pub fn convert(&self) -> Camera {
-        // TODO Use FoV to calculate the rectangle
-        Camera::default()
+        // TODO: Camera rotation
+        //let norm = self.rotation.normalize();
+        let norm = Vector3D { x: 0.0, y: 0.0, z: 1.0 };
+        let distance = self.resolution.width as f64 / (self.fov_horizontal / 2.0).tan() as f64;
+        let center = Point3D {
+            x: self.position.x + norm.x * distance - self.resolution.width as f64 / 2.0,
+            y: self.position.y + norm.y * distance - self.resolution.height as f64 / 2.0,
+            z: self.position.z + norm.z * distance,
+        };
+
+        Camera {
+            origin: self.position,
+            screen: Rectangle3D {
+                origin: center,
+                top_side: Vector3D { x: self.resolution.width as f64, ..Default::default() },
+                left_side: Vector3D { y: self.resolution.height as f64, ..Default::default()}
+            }
+        }
     }
 }
