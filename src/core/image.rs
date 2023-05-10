@@ -17,11 +17,16 @@ pub fn write_ppm_file(file_name: &String, width: usize, height: usize, colors: V
         Err(err) => return Err(Box::new(err)),
     }
 
+    let mut bytes: Vec<u8> = Vec::with_capacity(colors.len() * 3);
     for color in colors {
-        match file_handle.write(&[color.r, color.g, color.b]) {
-            Ok(_) => (),
-            Err(err) => return Err(Box::new(err)),
-        }
+        bytes.push(color.r);
+        bytes.push(color.g);
+        bytes.push(color.b);
+    }
+
+    match file_handle.write_all(&bytes) {
+        Ok(_) => (),
+        Err(err) => return Err(Box::new(err)),
     }
     Ok(())
 }
