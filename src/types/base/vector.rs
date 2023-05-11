@@ -18,6 +18,14 @@ impl Vector3D {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
+    pub fn normalize(&self) -> Vector3D {
+        let length = self.length();
+        if length <= 0.0 {
+            return Vector3D { x: 0.0, y: 0.0, z: 0.0 };
+        }
+        Vector3D { x: self.x / length, y: self.y / length, z: self.z / length }
+    }
+
     pub fn axis_value(&self, axis: AxisEnum) -> f64 {
         match axis {
             AxisEnum::X => self.x,

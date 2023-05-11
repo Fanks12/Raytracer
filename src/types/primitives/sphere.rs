@@ -45,4 +45,8 @@ impl Primitive for Sphere {
             ray.hits.push((Point3D { x: ray.origin.x + ray.direction.x * tdeux, y: ray.origin.y + ray.direction.y * tdeux, z: ray.origin.z + ray.direction.z * tdeux}, self.color));
         }
     }
+
+    fn get_color(&self) -> &Color {
+        &self.color
+    }
 }

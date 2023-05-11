@@ -1,15 +1,14 @@
-use crate::types::base::ray::Ray;
-use self::plane::Plane;
-use self::sphere::Sphere;
-
 use serde::Deserialize;
 use std::fmt;
+use crate::types::base::color::Color;
+use crate::types::base::ray::Ray;
 
 pub mod plane;
 pub mod sphere;
 
 pub trait Primitive {
     fn intersects(&self, ray: &mut Ray);
+    fn get_color(&self) -> &Color;
 }
 
 #[derive(Default)]

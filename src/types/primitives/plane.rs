@@ -38,6 +38,10 @@ impl Primitive for Plane {
             ray.hits.push((ray.origin + ray.direction * ratio, self.color));
         }
     }
+
+    fn get_color(&self) -> &Color {
+        &self.color
+    }
 }
 
 impl Default for Plane {
