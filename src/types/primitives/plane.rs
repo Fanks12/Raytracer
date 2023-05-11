@@ -1,13 +1,14 @@
 use serde::Deserialize;
-use crate::types::base::point::AxisEnum;
+use crate::types::base::point::Point3D;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
+use crate::types::base::vector::Vector3D;
 
-#[derive(Deserialize, Copy, Clone)]
+#[derive(Deserialize, Copy, Clone, Default)]
 pub struct Plane {
-    pub axis: AxisEnum,
-    pub padding :f64,
+    pub point: Point3D,
+    pub norm: Vector3D,
     pub color: Color,
 }
 
@@ -28,23 +29,27 @@ impl<'de> Plane {
 
 impl Primitive for Plane {
     fn intersects(&self, ray: &mut Ray) {
-        let a: f64 = ray.origin.axis_value(self.axis);
+        let cross = ray.direction.dot_product(self.norm);
+
+        if cross != 0.0 {
+            let coef = (ray.origin - self.point).to_vec().dot_product(self.norm) / cross;
+
+            if coef > 0.0 {
+                ray.hits.push((ray.origin + ray.direction * coef, self.color));
+            }
+        }
+
+        /*let a: f64 = ray.origin.axis_value(self.axis);
         let b: f64 =  ray.origin.axis_value(self.axis) + ray.direction.axis_value(self.axis);
         let diffa: f64 = a + self.padding;
         let diffb: f64 = b + self.padding;
         if diffa.abs() > diffb.abs() {
             let ratio: f64 = (-self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
             ray.hits.push((ray.origin + ray.direction * ratio, self.color));
-        }
+        }*/
     }
 
     fn get_color(&self) -> &Color {
         &self.color
-    }
-}
-
-impl Default for Plane {
-    fn default() -> Self {
-        Plane { axis: AxisEnum::Z, padding: 0.0, color: Default::default() }
     }
 }
