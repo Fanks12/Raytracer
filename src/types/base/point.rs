@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Sub, SubAssign};
 use serde::Deserialize;
 use crate::types::base::vector::Vector3D;
 
-#[derive(Clone, Copy, Deserialize)]
+#[derive(Clone, Copy, Deserialize, Debug)]
 pub enum AxisEnum {
     X,
     Y,
@@ -89,5 +89,25 @@ impl AddAssign<Vector3D> for Point3D {
         self.x += rhs.x;
         self.y += rhs.y;
         self.z += rhs.z;
+    }
+}
+
+impl Sub<Vector3D> for Point3D {
+    type Output = Point3D;
+
+    fn sub(self, rhs: Vector3D) -> Self::Output {
+        Point3D {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
+        }
+    }
+}
+
+impl SubAssign<Vector3D> for Point3D {
+    fn sub_assign(&mut self, rhs: Vector3D) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
+        self.z -= rhs.z;
     }
 }

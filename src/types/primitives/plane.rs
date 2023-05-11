@@ -11,6 +11,21 @@ pub struct Plane {
     pub color: Color,
 }
 
+impl<'de> Plane {
+    pub fn create_plane_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        let plane: Plane = match serde_yaml::from_value(data) {
+            Ok(obj) => obj,
+            Err(err) => {
+                return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
+            }
+        };
+        Ok(Box::new(plane) as Box<dyn Primitive>)
+    }
+}
+
 impl Primitive for Plane {
     fn intersects(&self, ray: &mut Ray) {
         let a: f64 = ray.origin.axis_value(self.axis);
@@ -21,6 +36,10 @@ impl Primitive for Plane {
             let ratio: f64 = (-self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
             ray.hits.push((ray.origin + ray.direction * ratio, self.color));
         }
+    }
+
+    fn get_color(&self) -> &Color {
+        &self.color
     }
 }
 
