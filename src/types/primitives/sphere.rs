@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use serde_json::Error;
 use crate::types::base::point::Point3D;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;

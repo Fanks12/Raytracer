@@ -19,13 +19,13 @@
     ],
     "camera" : {
         "resolution" : {
-            "height" : 1080,
-            "width" : 1920
+            "width" : 1920,
+            "height" : 1080
         },
         "position" : {
             "x" : 0,
             "y" : 0,
-            "z" : -10
+            "z" : -100
         },
         "rotation" :{
             "x" : 0,
@@ -40,23 +40,11 @@
             "Sphere",
             {
                 "center": {
-                    "x": 1.0,
-                    "y": 2.0,
-                    "z": 3.0
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "radius": 4.0,
-                "color": {
-                    "r": 0,
-                    "g": 1,
-                    "b": 0
-                }
-            }
-        ],
-        [
-            "Plane",
-            {
-                "axis": "X",
-                "padding": -5,
                 "color": {
                     "r": 255,
                     "g": 0,

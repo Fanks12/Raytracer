@@ -2,6 +2,8 @@ use serde::Deserialize;
 use std::fmt;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
+use crate::types::primitives::plane::Plane;
+use crate::types::primitives::sphere::Sphere;
 
 pub mod plane;
 pub mod sphere;
