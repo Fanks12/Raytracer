@@ -10,7 +10,7 @@ pub struct Renderer {
     countdown: Arc<(Mutex<usize>, Condvar)>,
     threads: Vec<Arc<(Mutex<bool>, Condvar)>>,
     handles: Vec<JoinHandle<()>>,
-    pub colors: Arc<Mutex<Vec<Color>>>
+    colors: Arc<Mutex<Vec<Color>>>
 }
 
 impl Renderer {
@@ -95,7 +95,7 @@ impl Renderer {
                 }
             }));
         }
-        _ = cvar_wait.wait(remaining).unwrap();
+        drop(cvar_wait.wait(remaining).unwrap());
     }
 
     pub fn render(&mut self) {
@@ -106,11 +106,11 @@ impl Renderer {
         for arc in &self.threads {
             let mutex = &arc.0;
             let cvar = &arc.1;
-            _ = mutex.lock().unwrap();
+            drop(mutex.lock().unwrap());
             cvar.notify_one();
         }
 
-        _ = cvar_count.wait(remaining).unwrap();
+        drop(cvar_count.wait(remaining).unwrap());
     }
 
     pub fn terminate(&mut self) {
