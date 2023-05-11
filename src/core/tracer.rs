@@ -9,7 +9,7 @@ pub fn raytrace(options: OptsArgs) -> Result<(), Box<dyn error::Error>> {
     let result = parse_file(&options.scene_file);
     match result {
         Ok(_) => exec_raytracing(options, result.unwrap()),
-        Err(err) => return Err(err),
+        Err(err) => Err(err),
     }
 }
 

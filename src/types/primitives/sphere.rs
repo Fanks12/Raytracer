@@ -16,13 +16,12 @@ impl<'de> Sphere {
     where
         A: serde::de::SeqAccess<'de>,
     {
-        let sphere: Sphere;
-        match serde_yaml::from_value(data) {
-            Ok(obj) => sphere = obj,
+        let sphere: Sphere = match serde_yaml::from_value(data) {
+            Ok(obj) => obj,
             Err(err) => {
                 return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
             }
-        }
+        };
         Ok(Box::new(sphere) as Box<dyn Primitive>)
     }
 }

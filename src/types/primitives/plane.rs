@@ -16,13 +16,12 @@ impl<'de> Plane {
     where
         A: serde::de::SeqAccess<'de>,
     {
-        let plane : Plane;
-        match serde_yaml::from_value(data) {
-            Ok(obj) => plane = obj,
+        let plane: Plane = match serde_yaml::from_value(data) {
+            Ok(obj) => obj,
             Err(err) => {
                 return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
             }
-        }
+        };
         Ok(Box::new(plane) as Box<dyn Primitive>)
     }
 }
