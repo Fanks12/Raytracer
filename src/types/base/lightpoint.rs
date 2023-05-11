@@ -20,7 +20,7 @@ impl Default for LightPoint {
 
 impl LightPoint {
     pub fn brightness(&self, reflexion: (Point3D, Color), elements: &Vec<Box<dyn Primitive>>) -> Color {
-        let ray: Ray = Ray {
+        let mut ray: Ray = Ray {
             origin: reflexion.0,
             direction: (self.position - reflexion.0).to_vec(),
             hits: Vec::new(),

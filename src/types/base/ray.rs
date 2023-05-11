@@ -2,7 +2,7 @@ use crate::types::base::point::Point3D;
 use crate::types::base::vector::Vector3D;
 use crate::types::base::color::Color;
 use crate::types::primitives::Primitive;
-use crate::types::base::light_point::LightPoint;
+use crate::types::base::lightpoint::LightPoint;
 
 #[derive(Default, Clone)]
 pub struct Ray {
@@ -37,9 +37,9 @@ impl Ray {
 
     fn brighter(&self) -> Color {
         let mut res: Color = Color{..Default::default()};
-        for color in self.outputs {
+        for color in &self.outputs {
             if color.sum() > res.sum() {
-                res = color;
+                res = *color;
             }
         }
         res
