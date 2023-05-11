@@ -1,6 +1,5 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 use serde::Deserialize;
-use crate::types::base::point::AxisEnum;
 
 #[derive(Clone, Copy, Deserialize)]
 pub struct Vector3D {
@@ -24,14 +23,6 @@ impl Vector3D {
             return Vector3D { x: 0.0, y: 0.0, z: 0.0 };
         }
         Vector3D { x: self.x / length, y: self.y / length, z: self.z / length }
-    }
-
-    pub fn axis_value(&self, axis: AxisEnum) -> f64 {
-        match axis {
-            AxisEnum::X => self.x,
-            AxisEnum::Y => self.y,
-            AxisEnum::Z => self.z,
-        }
     }
 }
 
