@@ -1,6 +1,5 @@
-use std::io::Read;
-use std::error;
 use serde::Deserialize;
+use std::io::Read;
 use std::path::Path;
 use std::error::Error;
 use std::fmt;
@@ -29,14 +28,14 @@ pub struct Parser {
 }
 
 pub enum FileType {
-    JSON,
-    YAML,
-    UNKNOWN
+    Json,
+    Yaml,
+    Unknown
 }
 
-pub fn parse_json(content : &String) -> Result<Scene, Box<dyn error::Error>>
+pub fn parse_json(content : &str) -> Result<Scene, Box<dyn Error>>
 {
-    let data: &str = &content;
+    let data: &str = content;
     let parser : Parser = serde_json::from_str(data).map_err(|error| {
         format!("Failed to convert scene : {}", error)
     })?;
@@ -45,9 +44,9 @@ pub fn parse_json(content : &String) -> Result<Scene, Box<dyn error::Error>>
     Ok(scene)
 }
 
-pub fn parse_yaml(content : &String) -> Result<Scene, Box<dyn error::Error>>
+pub fn parse_yaml(content : &str) -> Result<Scene, Box<dyn Error>>
 {
-    let data: &str = &content;
+    let data: &str = content;
     let parser : Parser = serde_yaml ::from_str(data).map_err(|error| {
         format!("Failed to convert scene : {}", error)
     })?;
@@ -61,20 +60,18 @@ pub fn select_file_type(file_path: &String) -> FileType
     match Path::new(&file_path).extension() {
         Some(ext) => {
             if ext == "json" {
-                return FileType::JSON
-            }
-            if ext == "yaml" {
-                return FileType::YAML
-            }
-            else {
-                return FileType::UNKNOWN
+                FileType::Json
+            } else if ext == "yaml" {
+                FileType::Yaml
+            } else {
+                FileType::Unknown
             }
         }
-        None => FileType::UNKNOWN,
+        None => FileType::Unknown,
     }
 }
 
-pub fn parse_file(file_path: &String) -> Result<Scene, Box<dyn error::Error>>
+pub fn parse_file(file_path: &String) -> Result<Scene, Box<dyn Error>>
 {
     let path = file_path;
     let mut file = std::fs::File::open(path).map_err(|error| {
@@ -86,8 +83,8 @@ pub fn parse_file(file_path: &String) -> Result<Scene, Box<dyn error::Error>>
         format!("Failed to read file contents: {}", error)
     })?;
     match select_file_type(file_path) {
-        FileType::JSON => parse_json(&content),
-        FileType::YAML => parse_yaml(&content),
-        FileType::UNKNOWN => Err(Box::new(ExtensionError("Unknown extension".into()))),
+        FileType::Json => parse_json(&content),
+        FileType::Yaml => parse_yaml(&content),
+        FileType::Unknown => Err(Box::new(ExtensionError("Unknown extension".into()))),
     }
 }
