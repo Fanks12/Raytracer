@@ -14,10 +14,13 @@ impl Default for Color {
 }
 
 impl Color {
-    fn sum(&self, rhs: u8) -> Color {
+    pub fn addi(&self, rhs: u8) -> Color {
         Color { r: self.r.saturating_add(rhs), g: self.g.saturating_add(rhs), b: self.b.saturating_add(rhs) }
     }
-    fn dif(&self, rhs: u8) -> Color {
+    pub fn dif(&self, rhs: u8) -> Color {
         Color { r: self.r.saturating_sub(rhs), g: self.g.saturating_sub(rhs), b: self.b.saturating_sub(rhs) }
+    }
+    pub fn sum(&self) -> u32 {
+        u32::from(self.r) + u32::from(self.g) + u32::from(self.b)
     }
 }
