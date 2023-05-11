@@ -131,4 +131,10 @@ impl Renderer {
         let colors = mutex.lock().unwrap();
         (&(*colors)[(*self.scene).resolution.width * y + x]).clone()
     }
+
+    pub fn get_colors(&self) -> Vec<Color> {
+        let mutex = &*self.colors;
+        let colors = mutex.lock().unwrap();
+        (&*colors).clone()
+    }
 }
