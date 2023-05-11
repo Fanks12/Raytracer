@@ -3,13 +3,6 @@ use serde::Deserialize;
 use crate::types::base::vector::Vector3D;
 
 #[derive(Clone, Copy, Deserialize)]
-pub enum AxisEnum {
-    X,
-    Y,
-    Z,
-}
-
-#[derive(Clone, Copy, Deserialize)]
 pub struct Point3D {
     pub x: f64,
     pub y: f64,
@@ -21,15 +14,7 @@ impl Point3D {
         Vector3D { x: self.x, y: self.y, z: self.z }
     }
 
-    pub fn axis_value(&self, axis: AxisEnum) -> f64 {
-        match axis {
-            AxisEnum::X => self.x,
-            AxisEnum::Y => self.y,
-            AxisEnum::Z => self.z,
-        }
-    }
-
-    pub fn dist(&self, point: Point3D) -> f64 {
+    pub fn distance(&self, point: Point3D) -> f64 {
         ((point.x - self.x).powi(2) + (point.y - self.y).powi(2) + (point.z - self.z).powi(2)).sqrt()
     }
 }

@@ -75,7 +75,7 @@ impl Renderer {
                         let y = i / width;
                         let xf = x as f64 / width as f64;
                         let yf = y as f64 / height as f64;
-                        colors[i - start] = scene.camera.ray(xf, yf).first_hit(&scene.primitives);
+                        colors[i - start] = scene.camera.ray(xf, yf).first_hit(&scene.primitives.0);
                     }
 
                     {

@@ -11,6 +11,21 @@ pub struct Sphere {
     pub color: Color,
 }
 
+impl<'de> Sphere {
+    pub fn create_sphere_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive + Send + Sync>, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        let sphere: Sphere = match serde_yaml::from_value(data) {
+            Ok(obj) => obj,
+            Err(err) => {
+                return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
+            }
+        };
+        Ok(Box::new(sphere) as Box<dyn Primitive + Send + Sync>)
+    }
+}
+
 impl Primitive for Sphere {
     fn intersects(&self, ray: &mut Ray) {
         let a: f64 = ray.direction.x.powi(2) + ray.direction.y.powi(2) + ray.direction.z.powi(2);
