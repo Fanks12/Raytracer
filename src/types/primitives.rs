@@ -2,6 +2,7 @@ use serde::Deserialize;
 use std::fmt;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
+use crate::types::primitives::cylindre::Cylindre;
 use crate::types::primitives::plane::Plane;
 use crate::types::primitives::sphere::Sphere;
 
@@ -21,6 +22,7 @@ pub struct PrimitiveVec(pub Vec<Box<dyn Primitive>>);
 enum PrimitiveType {
     Sphere,
     Plane,
+    Cylindre,
 }
 
 impl<'de> serde::Deserialize<'de> for PrimitiveVec {
@@ -47,6 +49,7 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
                     let primitive = match typ {
                         PrimitiveType::Sphere => Sphere::create_sphere_from_serde::<A>(data)?,
                         PrimitiveType::Plane => Plane::create_plane_from_serde::<A>(data)?,
+                        PrimitiveType::Cylindre => Cylindre::create_cylindre_from_serde::<A>(data)?,
                     };
                     primitives.push(primitive);
                 }

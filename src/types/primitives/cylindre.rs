@@ -10,7 +10,23 @@ pub struct Cylindre {
     radius : f64,
     height : f64,
     center : Point3D,
-    pub color: Color,
+    color: Color,
+}
+
+impl<'de> Cylindre {
+    pub fn create_cylindre_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        let cylindre: Cylindre;
+        match serde_yaml::from_value(data) {
+            Ok(obj) => cylindre = obj,
+            Err(err) => {
+                return Err(serde::de::Error::custom(format!("Failed to deserialize cylindre: {}", err)));
+            }
+        }
+        Ok(Box::new(cylindre) as Box<dyn Primitive>)
+    }
 }
 
 impl Cylindre {
