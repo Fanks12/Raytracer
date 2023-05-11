@@ -15,6 +15,9 @@ impl Default for Color {
 
 impl Color {
     fn sum(&self, rhs: u8) -> Color {
-        Color { r: self.r + rhs, g: self.g + rhs, b: self.b + rhs }
+        Color { r: self.r.saturating_add(rhs), g: self.g.saturating_add(rhs), b: self.b.saturating_add(rhs) }
+    }
+    fn dif(&self, rhs: u8) -> Color {
+        Color { r: self.r.saturating_sub(rhs), g: self.g.saturating_sub(rhs), b: self.b.saturating_sub(rhs) }
     }
 }

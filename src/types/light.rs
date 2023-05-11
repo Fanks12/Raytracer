@@ -22,6 +22,10 @@ pub trait Light {
             let percent: f64 = (self.position.dist(reflexion.1) / self.power - 0.05) * 2;
             result = 255 * percent;
         }
-        reflexion.2.sum(result)
+        if result < 0 {
+            reflexion.2.dif(result * -1)
+        } else {
+            reflexion.2.sum(result)
+        }
     }
 }
