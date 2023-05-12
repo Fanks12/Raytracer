@@ -9,23 +9,6 @@ pub fn run_graphical(renderer: Renderer) {
     let height: u32 = renderer.scene.resolution.height as u32;
     let renderer = Arc::new(Mutex::new(renderer));
     let renderer2 = renderer.clone();
-    let running = Arc::new(Mutex::new(true));
-    let running2 = running.clone();
-    let render = std::thread::spawn(move || {
-        loop {
-            {
-                let running = running.lock().unwrap();
-                if !*running {
-                    break;
-                }
-            }
-            {
-                let mut renderer = renderer2.lock().unwrap();
-                renderer.render();
-            }
-            std::thread::sleep(std::time::Duration::from_millis(16));
-        }
-    });
 
     nannou::app(Arc::new(move |app| {
         app.new_window()
@@ -35,16 +18,19 @@ pub fn run_graphical(renderer: Renderer) {
         Model { renderer: renderer.clone() }
     }))
         .event(event)
+        .update(update)
         .view(view)
         .run();
-    {
-        let mut running = running2.lock().unwrap();
-        *running = false;
-    }
-    render.join().unwrap();
+    let mut renderer = renderer2.lock().unwrap();
+    renderer.terminate();
 }
 
 fn event(_app: &App, _model: &mut Model, _event: Event) {
+}
+
+fn update(_app: &App, model: &mut Model, _update: Update) {
+    let mut renderer = model.renderer.lock().unwrap();
+    renderer.render();
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
