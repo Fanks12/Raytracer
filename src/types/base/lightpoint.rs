@@ -41,18 +41,17 @@ impl LightPoint {
     }
 
     fn luminosity(&self, reflexion: (Point3D, Color), calculable: bool) -> Color {
+        let mut percent: f64 = 0.0;
         if calculable {
-            let mut percent: f64 = 1.0 - self.position.dist(reflexion.0) / self.power - 0.5;
-            if self.power == 0.0 || self.position.dist(reflexion.0) > self.power {
-                percent = -0.8;
-            }
-            let result: f64 = 255.0 * percent;
-            if result < 0.0 {
-                return reflexion.1.dif(result.abs() as u8);
-            } else {
-                return reflexion.1.addi(result as u8);
-            }
+            percent = 1.0 - self.position.dist(reflexion.0) / self.power - 0.5;
+        } else if !calculable || self.power == 0.0 || self.position.dist(reflexion.0) > self.power {
+            percent = -0.90;
         }
-        Color { r: 0, g: 0, b: 0 }
+        let result: f64 = 255.0 * percent;
+        if result < 0.0 {
+            reflexion.1.dif(result.abs() as u8)
+        } else {
+            reflexion.1.addi(result as u8)
+        }
     }
 }

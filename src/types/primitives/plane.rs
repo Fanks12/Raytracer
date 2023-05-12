@@ -29,11 +29,9 @@ impl<'de> Plane {
 impl Primitive for Plane {
     fn intersects(&self, ray: &mut Ray) {
         let a: f64 = ray.origin.axis_value(self.axis);
-        let b: f64 =  ray.origin.axis_value(self.axis) + ray.direction.axis_value(self.axis);
-        let diffa: f64 = a + self.padding;
-        let diffb: f64 = b + self.padding;
-        if diffa.abs() > diffb.abs() {
-            let ratio: f64 = (-self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
+        let b: f64 =  ray.direction.axis_value(self.axis);
+        if (a < self.padding && b > 0.0) || (a > self.padding && b < 0.0) || (self.padding == a) {
+            let ratio: f64 = (self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
             ray.hits.push((ray.origin + ray.direction * ratio, self.color));
         }
     }
