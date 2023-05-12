@@ -1,5 +1,7 @@
-use serde::Deserialize;
+use serde::{Deserialize};
 use std::fmt;
+
+use crate::types::transformations::rotation::Rotation;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
 use crate::types::primitives::cylindre::Cylindre;
@@ -13,6 +15,9 @@ pub mod cylindre;
 pub trait Primitive {
     fn intersects(&self, ray: &mut Ray);
     fn get_color(&self) -> &Color;
+    fn rotate_x(&self, rota : Rotation);
+    fn rotate_y(&self, rota : Rotation);
+    fn rotate_z(&self, rota : Rotation);
 }
 
 #[derive(Default)]
@@ -23,6 +28,7 @@ enum PrimitiveType {
     Sphere,
     Plane,
     Cylindre,
+    Rotation,
 }
 
 impl<'de> serde::Deserialize<'de> for PrimitiveVec {
@@ -43,15 +49,23 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
             where
                 A: serde::de::SeqAccess<'de>,
             {
-                let mut primitives = Vec::new();
+                let mut primitives: Vec<Box<dyn Primitive>> = Vec::new();
+                let mut primitive: Option<Box<dyn Primitive>> = None;
 
                 while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
-                    let primitive = match typ {
-                        PrimitiveType::Sphere => Sphere::create_sphere_from_serde::<A>(data)?,
-                        PrimitiveType::Plane => Plane::create_plane_from_serde::<A>(data)?,
-                        PrimitiveType::Cylindre => Cylindre::create_cylindre_from_serde::<A>(data)?,
+                    match typ {
+                        PrimitiveType::Sphere => primitive = Some(Sphere::create_sphere_from_serde::<A>(data)?),
+                        PrimitiveType::Plane => primitive = Some(Plane::create_plane_from_serde::<A>(data)?),
+                        PrimitiveType::Cylindre => primitive = Some(Cylindre::create_cylindre_from_serde::<A>(data)?),
+                        PrimitiveType::Rotation =>  match Rotation::rotate_primitive::<A>(primitives.last(), data) {
+                            Ok(()) => continue,
+                            Err(err) => return Err(err)
+                            }
                     };
-                    primitives.push(primitive);
+                    match primitive {
+                        Some(primitive) => primitives.push(primitive),
+                        None => continue
+                    }
                 }
                 Ok(PrimitiveVec(primitives))
             }

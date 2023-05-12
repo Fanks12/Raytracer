@@ -3,6 +3,7 @@ use crate::types::base::point::Point3D;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
+use crate::types::transformations::rotation::Rotation;
 
 #[derive(Clone, Copy, Deserialize)]
 pub struct Sphere {
@@ -47,5 +48,18 @@ impl Primitive for Sphere {
 
     fn get_color(&self) -> &Color {
         &self.color
+    }
+
+    fn rotate_x(&self, rota : Rotation) {
+        println!("rotate x")
+        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    }
+
+    fn rotate_y(&self, rota : Rotation) {
+        println!("rotate y")
+        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    }
+    fn rotate_z(&self, rota : Rotation) {
+        println!("rotate z")
     }
 }
