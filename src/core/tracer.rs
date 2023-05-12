@@ -1,5 +1,4 @@
 use std::error;
-use std::sync::Arc;
 use crate::core::graphical::run_graphical;
 use crate::core::image::write_ppm_file;
 use crate::core::options::OptsArgs;
@@ -18,8 +17,7 @@ pub fn raytrace(options: OptsArgs) -> Result<(), Box<dyn error::Error>> {
 fn exec_raytracing(options: OptsArgs, scene: Scene) -> Result<(), Box<dyn error::Error>> {
     let points_x = scene.resolution.width;
     let points_y = scene.resolution.height;
-    let scene = Arc::new(scene);
-    let mut renderer = Renderer::new(&scene);
+    let mut renderer = Renderer::new(scene);
 
     if options.external_file.is_some() {
         renderer.render();

@@ -1,12 +1,12 @@
 use crate::types::base::color::Color;
 use crate::types::config::scene::Scene;
-use std::sync::{Arc, Mutex, Condvar};
+use std::sync::{Arc, Mutex, Condvar, RwLock};
 use std::thread;
 use std::thread::JoinHandle;
 
 pub struct Renderer {
     num_threads: usize,
-    pub scene: Arc<Scene>,
+    pub scene: Arc<RwLock<Scene>>,
     countdown: Arc<(Mutex<usize>, Condvar)>,
     threads: Vec<Arc<(Mutex<bool>, Condvar)>>,
     handles: Vec<JoinHandle<()>>,
@@ -14,15 +14,17 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(scene: &Arc<Scene>) -> Self {
+    pub fn new(scene: Scene) -> Self {
+        let width = scene.resolution.width;
+        let height = scene.resolution.height;
         let num_threads = thread::available_parallelism().unwrap().get();
         let mut renderer = Self {
             num_threads: num_threads,
-            scene: scene.clone(),
+            scene: Arc::new(RwLock::new(scene)),
             countdown: Arc::new((Mutex::new(0), Condvar::new())),
             threads: Vec::with_capacity(num_threads),
             handles: Vec::with_capacity(num_threads),
-            colors: Arc::new(Mutex::new(vec![Color::default(); scene.resolution.width * scene.resolution.height]))
+            colors: Arc::new(Mutex::new(vec![Color::default(); width * height]))
         };
         renderer.create_threads();
         renderer
@@ -47,14 +49,24 @@ impl Renderer {
             self.handles.push(thread::spawn(move || {
                 let (mutex, cvar) = &*arc_thread;
                 let scene = &*scene_thread;
-                let width = scene.resolution.width as usize;
-                let height = scene.resolution.height as usize;
-                let size = width * height;
-                let diff = size as f64 / num_threads as f64;
-                let start = (diff * thread_id as f64).floor() as usize;
-                let end = (diff * (thread_id + 1) as f64).floor() as usize;
-                let mut colors = vec![Color::default(); end - start];
+                let width: usize;
+                let height: usize;
+                let size: usize;
+                let diff: f64;
+                let start: usize;
+                let end: usize;
+                let mut colors:Vec<Color>;
 
+                {
+                    let scene = scene.read().unwrap();
+                    width = scene.resolution.width as usize;
+                    height = scene.resolution.height as usize;
+                    size = width * height;
+                    diff = size as f64 / num_threads as f64;
+                    start = (diff * thread_id as f64).floor() as usize;
+                    end = (diff * (thread_id + 1) as f64).floor() as usize;
+                    colors = vec![Color::default(); end - start];
+                }
                 loop {
                     let mut running = mutex.lock().unwrap();
                     {
@@ -75,6 +87,7 @@ impl Renderer {
                         let y = i / width;
                         let xf = x as f64 / width as f64;
                         let yf = y as f64 / height as f64;
+                        let scene = scene.read().unwrap();
                         colors[i - start] = scene.camera.ray(xf, yf).first_hit(&scene.primitives.0);
                     }
 
@@ -129,7 +142,8 @@ impl Renderer {
     pub fn get_raw_colors(&self) -> Vec<u8> {
         let mutex = &*self.colors;
         let colors = mutex.lock().unwrap();
-        let mut bytes: Vec<u8> = Vec::with_capacity(self.scene.resolution.width * self.scene.resolution.height * 3);
+        let scene = self.scene.read().unwrap();
+        let mut bytes: Vec<u8> = Vec::with_capacity(scene.resolution.width * scene.resolution.height * 3);
 
         for color in colors.iter() {
             bytes.push(color.r);
