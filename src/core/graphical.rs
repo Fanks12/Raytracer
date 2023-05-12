@@ -25,7 +25,22 @@ pub fn run_graphical(renderer: Renderer) {
     renderer.terminate();
 }
 
-fn event(_app: &App, _model: &mut Model, _event: Event) {
+fn event(app: &App, _model: &mut Model, event: Event) {
+    match event {
+        Event::WindowEvent { id, simple } => {
+            drop(id);
+            match simple {
+                Some(e) => {
+                    match e {
+                        WindowEvent::Closed => app.quit(),
+                        _ => ()
+                    }
+                },
+                _ => ()
+            }
+        },
+        _ => ()
+    }
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
