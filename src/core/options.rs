@@ -1,15 +1,10 @@
 use getopts::Options;
 use std::env;
+use std::error::Error;
 
 pub struct OptsArgs {
     pub scene_file: String,
     pub external_file: Option<String>
-}
-
-pub enum OptsResult<T> {
-    Err,
-    Help,
-    Ok(T)
 }
 
 fn print_usage(program: &str, opts: Options) {
@@ -24,26 +19,28 @@ fn create_options() -> Options {
     opts
 }
 
-pub fn check_opts() -> OptsResult<OptsArgs> {
+pub fn check_opts() -> Result<Option<OptsArgs>, Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
     let opts = create_options();
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m }
         Err(f) => {
-            eprintln!("Error: {}", f);
-            return OptsResult::Err
+            return Err(Box::new(f));
         }
     };
     if matches.opt_present("h") {
         print_usage(&program, opts);
-        return OptsResult::Help
+        return Ok(None)
     }
     let scene_file = if !matches.free.is_empty() {
         matches.free[0].clone()
     } else {
         print_usage(&program, opts);
-        return OptsResult::Help
+        return Ok(None)
     };
-    OptsResult::Ok(OptsArgs{ scene_file, external_file: matches.opt_str("export") })
+    Ok(Option::from(OptsArgs {
+        scene_file,
+        external_file: matches.opt_str("export")
+    }))
 }
