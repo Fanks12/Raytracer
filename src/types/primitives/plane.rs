@@ -55,15 +55,15 @@ impl Primitive for Plane {
     }
 
     fn rotate_x(&self, rota : Rotation) {
-        println!("rotate x")
+        println!("rotate x for {} degrees", rota.angle)
         // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
     }
 
     fn rotate_y(&self, rota : Rotation) {
-        println!("rotate y")
+        println!("rotate y for {} degrees", rota.angle)
         // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
     }
     fn rotate_z(&self, rota : Rotation) {
-        println!("rotate z")
+        println!("rotate z for {} degrees", rota.angle)
     }
 }
