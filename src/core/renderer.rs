@@ -6,7 +6,7 @@ use std::thread::JoinHandle;
 
 pub struct Renderer {
     num_threads: usize,
-    scene: Arc<Scene>,
+    pub scene: Arc<Scene>,
     countdown: Arc<(Mutex<usize>, Condvar)>,
     threads: Vec<Arc<(Mutex<bool>, Condvar)>>,
     handles: Vec<JoinHandle<()>>,
@@ -126,15 +126,16 @@ impl Renderer {
         }
     }
 
-    pub fn get_color(&self, x: usize, y: usize) -> Color {
+    pub fn get_raw_colors(&self) -> Vec<u8> {
         let mutex = &*self.colors;
         let colors = mutex.lock().unwrap();
-        (&(*colors)[(*self.scene).resolution.width * y + x]).clone()
-    }
+        let mut bytes: Vec<u8> = Vec::with_capacity(self.scene.resolution.width * self.scene.resolution.height * 3);
 
-    pub fn get_colors(&self) -> Vec<Color> {
-        let mutex = &*self.colors;
-        let colors = mutex.lock().unwrap();
-        (&*colors).clone()
+        for color in colors.iter() {
+            bytes.push(color.r);
+            bytes.push(color.g);
+            bytes.push(color.b);
+        }
+        bytes
     }
 }

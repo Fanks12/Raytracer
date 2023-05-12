@@ -1,9 +1,8 @@
 use std::error::Error;
 use std::fs::File;
 use std::io::Write;
-use crate::types::base::color::Color;
 
-pub fn write_ppm_file(file_name: &String, width: usize, height: usize, colors: Vec<Color>) -> Result<(), Box<dyn Error>> {
+pub fn write_ppm_file(file_name: &String, width: usize, height: usize, bytes: Vec<u8>) -> Result<(), Box<dyn Error>> {
     let file_open = File::create(file_name);
     let mut file_handle: File;
     match file_open {
@@ -15,13 +14,6 @@ pub fn write_ppm_file(file_name: &String, width: usize, height: usize, colors: V
     match header_write {
         Ok(_) => (),
         Err(err) => return Err(Box::new(err)),
-    }
-
-    let mut bytes: Vec<u8> = Vec::with_capacity(colors.len() * 3);
-    for color in colors {
-        bytes.push(color.r);
-        bytes.push(color.g);
-        bytes.push(color.b);
     }
 
     match file_handle.write_all(&bytes) {

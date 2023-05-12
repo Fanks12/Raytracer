@@ -1,3 +1,4 @@
+pub mod graphical;
 pub mod image;
 pub mod options;
 pub mod parser;
