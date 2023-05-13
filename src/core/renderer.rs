@@ -82,12 +82,12 @@ impl Renderer {
                         break;
                     }
 
+                    let scene = scene.read().unwrap();
                     for i in start..end {
                         let x = i % width;
                         let y = i / width;
                         let xf = x as f64 / width as f64;
                         let yf = y as f64 / height as f64;
-                        let scene = scene.read().unwrap();
                         colors[i - start] = scene.camera.ray(xf, yf).first_hit(&scene.primitives.0);
                     }
 
@@ -139,16 +139,20 @@ impl Renderer {
         }
     }
 
-    pub fn get_raw_colors(&self) -> Vec<u8> {
+    pub fn get_raw_colors(&self, with_alpha: bool) -> Vec<u8> {
         let mutex = &*self.colors;
         let colors = mutex.lock().unwrap();
         let scene = self.scene.read().unwrap();
-        let mut bytes: Vec<u8> = Vec::with_capacity(scene.resolution.width * scene.resolution.height * 3);
+        let channels = if with_alpha { 4 } else { 3 };
+        let mut bytes: Vec<u8> = Vec::with_capacity(scene.resolution.width * scene.resolution.height * channels);
 
         for color in colors.iter() {
             bytes.push(color.r);
             bytes.push(color.g);
             bytes.push(color.b);
+            if with_alpha {
+                bytes.push(255);
+            }
         }
         bytes
     }

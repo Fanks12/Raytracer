@@ -21,7 +21,7 @@ fn exec_raytracing(options: OptsArgs, scene: Scene) -> Result<(), Box<dyn error:
 
     if options.external_file.is_some() {
         renderer.render();
-        let bytes = renderer.get_raw_colors();
+        let bytes = renderer.get_raw_colors(false);
         renderer.terminate();
         return write_ppm_file(&options.external_file.unwrap(), points_x, points_y, bytes);
     }

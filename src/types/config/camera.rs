@@ -41,7 +41,7 @@ impl Camera {
     }
 
     pub fn left(&mut self) {
-        self.origin.x += 1.0;
+        self.origin.x -= 1.0;
     }
 }
 

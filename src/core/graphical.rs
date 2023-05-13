@@ -1,8 +1,8 @@
-use nannou::{prelude::*, wgpu::Texture, image::{DynamicImage, RgbImage}};
+use nannou::{prelude::*, wgpu::Texture, image::{DynamicImage, RgbaImage}};
 use std::sync::{Arc, Mutex};
 use crate::core::renderer::Renderer;
 
-struct Model { renderer: Arc<Mutex<Renderer>> }
+struct Model { renderer: Arc<Mutex<Renderer>>, texture: Texture }
 
 pub fn run_graphical(renderer: Renderer) {
     let renderer = Arc::new(Mutex::new(renderer));
@@ -21,7 +21,9 @@ pub fn run_graphical(renderer: Renderer) {
             .size(width, height)
             .build()
             .unwrap();
-        Model { renderer: renderer.clone() }
+        let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
+        let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
+        Model { renderer: renderer.clone(), texture }
     }))
         .event(event)
         .update(update)
@@ -68,12 +70,8 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
     let renderer = model.renderer.lock().unwrap();
-    let scene = renderer.scene.read().unwrap();
-    let width: u32 = scene.resolution.width as u32;
-    let height: u32 = scene.resolution.height as u32;
-    let image = RgbImage::from_raw(width, height, renderer.get_raw_colors()).unwrap();
-    let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgb8(image));
 
-    draw.texture(&texture);
+    model.texture.upload_data(app.main_window().device(), &mut *frame.command_encoder(), &renderer.get_raw_colors(true));
+    draw.texture(&model.texture);
     draw.to_frame(app, &frame).unwrap();
 }
