@@ -49,16 +49,11 @@ impl Primitive for Sphere {
         &self.color
     }
 
-    fn rotate_x(&self, rota : Rotation) {
-        println!("rotate x for {} degrees", rota.angle)
-        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    fn rotate_x(&mut self, _rota : Rotation) {
     }
 
-    fn rotate_y(&self, rota : Rotation) {
-        println!("rotate y for {} degrees", rota.angle)
-        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    fn rotate_y(&mut self, _rota : Rotation) {
     }
-    fn rotate_z(&self, rota : Rotation) {
-        println!("rotate z for {} degrees", rota.angle)
+    fn rotate_z(&mut self, _rota : Rotation) {
     }
 }

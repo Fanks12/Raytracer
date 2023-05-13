@@ -65,16 +65,15 @@ impl Primitive for Cylindre {
         &self.color
     }
 
-    fn rotate_x(&self, rota : Rotation) {
-        println!("rotate x for {} degrees", rota.angle)
-        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    fn rotate_x(&mut self, rota : Rotation) {
+        self.body_vector.rotate(Vector3D { x: 1.0, y: 0.0, z: 0.0 }, rota.angle);
     }
 
-    fn rotate_y(&self, rota : Rotation) {
-        println!("rotate y for {} degrees", rota.angle)
-        // self.body_vector = Vector3D { x: 0.0 , y: rota.angle.cos() * self.body_vector.y, z: -rota.angle.sin() * self.body_vector.z}
+    fn rotate_y(&mut self, rota : Rotation) {
+        self.body_vector.rotate(Vector3D { x: 0.0, y: 1.0, z: 0.0 }, rota.angle);
     }
-    fn rotate_z(&self, rota : Rotation) {
-        println!("rotate z for {} degrees", rota.angle)
+
+    fn rotate_z(&mut self, rota : Rotation) {
+        self.body_vector.rotate(Vector3D { x: 0.0, y: 0.0, z: 1.0 }, rota.angle);
     }
 }
