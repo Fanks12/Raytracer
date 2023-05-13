@@ -29,29 +29,26 @@ impl LightPoint {
         for element in elements {
             element.intersects(&mut ray);
         }
-        self.luminosity(reflexion, self.is_bright(ray, reflexion.0))
+        self.luminosity(reflexion, self.is_behind(ray, reflexion.0))
     }
 
-    fn is_bright(&self, ray: Ray, pos: Point3D) -> bool {
+    fn is_behind(&self, ray: Ray, pos: Point3D) -> bool {
         if ray.closest().0.dist(self.position) < pos.dist(self.position)
         && ray.closest().0.dist(self.position) < pos.dist(ray.closest().0) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
-    fn luminosity(&self, reflexion: (Point3D, Color), calculable: bool) -> Color {
+    fn luminosity(&self, reflexion: (Point3D, Color), behind: bool) -> Color {
+        let angular: Vector3D = (reflexion.0 - self.position).to_vec();
+        let distance: f64 = self.position.dist(reflexion.0);
         let mut percent: f64 = 0.0;
-        if calculable {
-            percent = 1.0 - self.position.dist(reflexion.0) / self.power - 0.5;
-        } else if !calculable || self.power == 0.0 || self.position.dist(reflexion.0) > self.power {
-            percent = -0.90;
+        if distance < self.power * 0.1 {
+            percent = 1.1 - distance / self.power - self.direction.vector_to_angle(angular) * 180.0 / std::f64::consts::PI / 50.0;
+        } else if distance < self.power {
+            percent = (1.0 - distance / self.power) - self.direction.vector_to_angle(angular) * 180.0 / std::f64::consts::PI / 35.0;
         }
-        let result: f64 = 255.0 * percent;
-        if result < 0.0 {
-            reflexion.1.dif(result.abs() as u8)
-        } else {
-            reflexion.1.addi(result as u8)
-        }
+        reflexion.1.prop(percent)
     }
 }

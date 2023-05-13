@@ -14,13 +14,25 @@ impl Default for Color {
 }
 
 impl Color {
-    pub fn addi(&self, rhs: u8) -> Color {
-        Color { r: self.r.saturating_add(rhs), g: self.g.saturating_add(rhs), b: self.b.saturating_add(rhs) }
+    pub fn prop(&self, rhs: f64) -> Color {
+        Color { r: self.saturating_mulf(self.r, rhs), g: self.saturating_mulf(self.g, rhs), b: self.saturating_mulf(self.b, rhs) }
     }
-    pub fn dif(&self, rhs: u8) -> Color {
-        Color { r: self.r.saturating_sub(rhs), g: self.g.saturating_sub(rhs), b: self.b.saturating_sub(rhs) }
-    }
+
     pub fn sum(&self) -> u32 {
         u32::from(self.r) + u32::from(self.g) + u32::from(self.b)
+    }
+
+    pub fn saturating_mulf(&self, usign: u8, rhs: f64) -> u8 {
+        let mut result: f64 = f64::from(usign) * rhs;
+        if result == 0.0 && rhs > 1.0 {
+            result = 255.0 * (rhs - 0.8);
+        }
+        if result > 255.0 {
+            255
+        } else if result < 0.0 {
+            0
+        } else {
+            result as u8
+        }
     }
 }
