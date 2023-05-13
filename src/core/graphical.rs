@@ -1,36 +1,50 @@
 use nannou::{prelude::*, wgpu::Texture, image::{DynamicImage, RgbaImage}};
-use std::sync::{Arc, Mutex};
 use crate::core::renderer::Renderer;
+use crate::core::tracer::raytracer;
 
-struct Model { renderer: Arc<Mutex<Renderer>>, texture: Texture }
+struct Model {
+    renderer: Option<Renderer>,
+    texture: Option<Texture>
+}
 
-pub fn run_graphical(renderer: Renderer) {
-    let renderer = Arc::new(Mutex::new(renderer));
-    let renderer2 = renderer.clone();
-    let width: u32;
-    let height: u32;
-
-    {
-        let renderer = renderer.lock().unwrap();
-        let scene = renderer.scene.read().unwrap();
-        width = scene.resolution.width as u32;
-        height = scene.resolution.height as u32;
-    }
-    nannou::app(Arc::new(move |app| {
-        app.new_window()
-            .size(width, height)
-            .build()
-            .unwrap();
-        let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
-        let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
-        Model { renderer: renderer.clone(), texture }
-    }))
+pub fn run_raytracer() {
+    nannou::app(model)
         .event(event)
         .update(update)
         .view(view)
         .run();
-    let mut renderer = renderer2.lock().unwrap();
-    renderer.terminate();
+}
+
+fn model(app: &App) -> Model {
+    match raytracer() {
+        Ok(result) => {
+            match result {
+                Some(renderer) => {
+                    let width: u32;
+                    let height: u32;
+
+                    {
+                        let scene = renderer.scene.read().unwrap();
+                        width = scene.resolution.width as u32;
+                        height = scene.resolution.height as u32;
+                    }
+                    app.new_window()
+                        .size(width, height)
+                        .build()
+                        .unwrap();
+                    let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
+                    let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
+                    return Model { renderer: Some(renderer), texture: Some(texture) }
+                },
+                None => ()
+            }
+        },
+        Err(err) => {
+            println!("{}", err);
+        }
+    }
+    app.quit();
+    Model { renderer: None, texture: None }
 }
 
 fn event(app: &App, model: &mut Model, event: Event) {
@@ -45,33 +59,42 @@ fn event(app: &App, model: &mut Model, event: Event) {
 }
 
 fn window_event(app: &App, model: &mut Model, _id: WindowId, event: WindowEvent) {
-    match event {
-        Closed => app.quit(),
-        KeyPressed(key) => {
-            match key {
-                Key::Z => model.renderer.lock().unwrap().scene.write().unwrap().camera.forward(),
-                Key::S => model.renderer.lock().unwrap().scene.write().unwrap().camera.backward(),
-                Key::D => model.renderer.lock().unwrap().scene.write().unwrap().camera.right(),
-                Key::Q => model.renderer.lock().unwrap().scene.write().unwrap().camera.left(),
-                Key::Space => model.renderer.lock().unwrap().scene.write().unwrap().camera.up(),
-                Key::LShift => model.renderer.lock().unwrap().scene.write().unwrap().camera.down(),
-                _ => ()
-            }
-        },
-        _ => ()
+    if let Some(renderer) = &mut model.renderer {
+        match event {
+            Closed => {
+                renderer.terminate();
+                app.quit();
+            },
+            KeyPressed(key) => {
+                match key {
+                    Key::Z | Key::Up => renderer.scene.write().unwrap().camera.forward(),
+                    Key::S | Key::Down => renderer.scene.write().unwrap().camera.backward(),
+                    Key::D | Key::Right => renderer.scene.write().unwrap().camera.right(),
+                    Key::Q | Key::Left => renderer.scene.write().unwrap().camera.left(),
+                    Key::Space => renderer.scene.write().unwrap().camera.up(),
+                    Key::LShift | Key::C => renderer.scene.write().unwrap().camera.down(),
+                    _ => ()
+                }
+            },
+            _ => ()
+        }
     }
 }
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
-    let mut renderer = model.renderer.lock().unwrap();
-    renderer.render();
+    if let Some(renderer) = &mut model.renderer {
+        renderer.render();
+    }
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
-    let renderer = model.renderer.lock().unwrap();
 
-    model.texture.upload_data(app.main_window().device(), &mut *frame.command_encoder(), &renderer.get_raw_colors(true));
-    draw.texture(&model.texture);
+    if let Some(renderer) = &model.renderer {
+        if let Some(texture) = &model.texture {
+            texture.upload_data(app.main_window().device(), &mut *frame.command_encoder(), &renderer.get_raw_colors(true));
+            draw.texture(&texture);
+        }
+    }
     draw.to_frame(app, &frame).unwrap();
 }

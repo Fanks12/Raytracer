@@ -56,6 +56,7 @@ impl Renderer {
                 let start: usize;
                 let end: usize;
                 let mut colors:Vec<Color>;
+                let mut started = false;
 
                 {
                     let scene = scene.read().unwrap();
@@ -69,7 +70,8 @@ impl Renderer {
                 }
                 loop {
                     let mut running = mutex.lock().unwrap();
-                    {
+                    if !started {
+                        started = true;
                         let (mutex_wait, cvar_wait) = &*wait_start_thread;
                         let mut remaining = mutex_wait.lock().unwrap();
                         *remaining -= 1;
