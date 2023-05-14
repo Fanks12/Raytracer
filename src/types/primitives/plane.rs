@@ -39,15 +39,6 @@ impl Primitive for Plane {
                 ray.hits.push((ray.origin + ray.direction * coef, self.color));
             }
         }
-
-        /*let a: f64 = ray.origin.axis_value(self.axis);
-        let b: f64 =  ray.origin.axis_value(self.axis) + ray.direction.axis_value(self.axis);
-        let diffa: f64 = a + self.padding;
-        let diffb: f64 = b + self.padding;
-        if diffa.abs() > diffb.abs() {
-            let ratio: f64 = (-self.padding - ray.origin.axis_value(self.axis)) / ray.direction.axis_value(self.axis);
-            ray.hits.push((ray.origin + ray.direction * ratio, self.color));
-        }*/
     }
 
     fn get_color(&self) -> &Color {
