@@ -50,7 +50,7 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
                 A: serde::de::SeqAccess<'de>,
             {
                 let mut primitives: Vec<Box<dyn Primitive>> = Vec::new();
-                let mut primitive: Option<Box<dyn Primitive>> = None;
+                let mut primitive: Option<Box<dyn Primitive>>;
 
                 while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
                     match typ {
