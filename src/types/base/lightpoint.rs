@@ -28,7 +28,7 @@ impl LightPoint {
 
     fn luminosity(&self, reflexion: (Point3D, Color)) -> Color {
         let angular: Vector3D = (reflexion.0 - self.position).to_vec();
-        let distance: f64 = self.position.dist(reflexion.0);
+        let distance: f64 = self.position.distance(reflexion.0);
         let mut percent: f64 = 0.0;
         if distance < self.power * 0.1 {
             percent = 1.1 - distance / self.power - self.direction.vector_to_angle(angular) * 180.0 / std::f64::consts::PI / 50.0;
