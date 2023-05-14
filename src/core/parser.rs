@@ -4,7 +4,7 @@ use std::path::Path;
 use std::error::Error;
 use std::fmt;
 use crate::types::config::camera::CamConfig;
-use crate::types::config::Light;
+use crate::types::base::lightpoint::LightPoint;
 use crate::types::config::scene::Scene;
 use crate::types::primitives::PrimitiveVec;
 
@@ -22,7 +22,7 @@ impl Error for ExtensionError {}
 
 #[derive(Default, Deserialize)]
 pub struct Parser {
-    pub lights: Vec<Light>,
+    pub lights: Vec<LightPoint>,
     pub camera: CamConfig,
     pub primitives: PrimitiveVec,
 }
