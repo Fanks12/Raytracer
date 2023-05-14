@@ -1,20 +1,30 @@
 {
     "lights": [
         {
-            "pos": {
-                "x": 5,
-                "y": 4,
-                "z": 3
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
             },
-            "angle": 43
+            "direction": {
+                "x": -1,
+                "y": 0,
+                "z": 0
+            },
+            "power": 0.0
         },
         {
-            "pos": {
-                "x": 1,
-                "y": 2,
-                "z": 4
+            "position": {
+                "x": 2,
+                "y": 10,
+                "z": 40
             },
-            "angle": 60
+            "direction": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "power": 100.0
         }
     ],
     "camera" : {
