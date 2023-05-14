@@ -5,17 +5,11 @@ use crate::types::primitives::Primitive;
 use crate::types::base::ray::Ray;
 use serde::Deserialize;
 
-#[derive(Copy, Clone, Deserialize)]
+#[derive(Copy, Clone, Deserialize, Default)]
 pub struct LightPoint {
     pub position: Point3D,
     pub direction: Vector3D,
     pub power: f64,
-}
-
-impl Default for LightPoint {
-    fn default() -> Self {
-        LightPoint { ..Default::default() }
-    }
 }
 
 impl LightPoint {
@@ -29,18 +23,10 @@ impl LightPoint {
         for element in elements {
             element.intersects(&mut ray);
         }
-        self.luminosity(reflexion, self.is_behind(ray, reflexion.0))
+        self.luminosity(reflexion)
     }
 
-    fn is_behind(&self, ray: Ray, pos: Point3D) -> bool {
-        if ray.closest().0.dist(self.position) < pos.dist(self.position)
-        && ray.closest().0.dist(self.position) < pos.dist(ray.closest().0) {
-            return true;
-        }
-        return false;
-    }
-
-    fn luminosity(&self, reflexion: (Point3D, Color), behind: bool) -> Color {
+    fn luminosity(&self, reflexion: (Point3D, Color)) -> Color {
         let angular: Vector3D = (reflexion.0 - self.position).to_vec();
         let distance: f64 = self.position.dist(reflexion.0);
         let mut percent: f64 = 0.0;
