@@ -24,6 +24,15 @@ impl Vector3D {
         }
         Vector3D { x: self.x / length, y: self.y / length, z: self.z / length }
     }
+
+    pub fn vector_to_angle(&self, vec: Self) -> f64 {
+        let length = self.length();
+        let lenght = vec.length();
+        if length == 0.0 || lenght == 0.0 {
+            return 0.0;
+        }
+        (self.dot_product(vec) / (length * lenght)).acos()
+    }
 }
 
 impl Default for Vector3D {
