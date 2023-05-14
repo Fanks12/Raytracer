@@ -30,13 +30,16 @@ fn model(app: &App) -> Model {
                         width = scene.resolution.width as u32;
                         height = scene.resolution.height as u32;
                     }
-                    app.new_window()
-                        .size(width, height)
-                        .build()
-                        .unwrap();
-                    let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
-                    let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
-                    return Model { renderer: Some(renderer), texture: Some(texture), keys: HashSet::default() }
+                    match app.new_window().size(width, height).build() {
+                        Ok(_) => {
+                            let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
+                            let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
+                            return Model { renderer: Some(renderer), texture: Some(texture), keys: HashSet::default() }
+                        },
+                        Err(err) => {
+                            println!("{}", err);
+                        }
+                    }
                 },
                 None => ()
             }
