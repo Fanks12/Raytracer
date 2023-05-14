@@ -3,6 +3,7 @@ use crate::types::base::point::Point3D;
 use crate::types::primitives::Primitive;
 use crate::types::base::color::Color;
 use crate::types::base::ray::Ray;
+use crate::types::transformations::rotation::Rotation;
 
 #[derive(Clone, Copy, Deserialize)]
 pub struct Sphere {
@@ -12,7 +13,7 @@ pub struct Sphere {
 }
 
 impl<'de> Sphere {
-    pub fn create_sphere_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    pub fn create_sphere_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive + Send + Sync>, A::Error>
     where
         A: serde::de::SeqAccess<'de>,
     {
@@ -22,7 +23,7 @@ impl<'de> Sphere {
                 return Err(serde::de::Error::custom(format!("Failed to deserialize sphere: {}", err)));
             }
         };
-        Ok(Box::new(sphere) as Box<dyn Primitive>)
+        Ok(Box::new(sphere) as Box<dyn Primitive + Send + Sync>)
     }
 }
 
@@ -46,5 +47,13 @@ impl Primitive for Sphere {
 
     fn get_color(&self) -> &Color {
         &self.color
+    }
+
+    fn rotate_x(&mut self, _rota : Rotation) {
+    }
+
+    fn rotate_y(&mut self, _rota : Rotation) {
+    }
+    fn rotate_z(&mut self, _rota : Rotation) {
     }
 }
