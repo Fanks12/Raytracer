@@ -1,10 +1,12 @@
 use nannou::{prelude::*, wgpu::Texture, image::{DynamicImage, RgbaImage}};
+use std::collections::HashSet;
 use crate::core::renderer::Renderer;
 use crate::core::tracer::raytracer;
 
 struct Model {
     renderer: Option<Renderer>,
-    texture: Option<Texture>
+    texture: Option<Texture>,
+    keys: HashSet<Key>
 }
 
 pub fn run_raytracer() {
@@ -34,7 +36,7 @@ fn model(app: &App) -> Model {
                         .unwrap();
                     let image = RgbaImage::from_raw(width, height, vec![0; (width * height * 4) as usize]).unwrap();
                     let texture = Texture::from_image(&app.main_window(), &DynamicImage::ImageRgba8(image));
-                    return Model { renderer: Some(renderer), texture: Some(texture) }
+                    return Model { renderer: Some(renderer), texture: Some(texture), keys: HashSet::default() }
                 },
                 None => ()
             }
@@ -44,7 +46,7 @@ fn model(app: &App) -> Model {
         }
     }
     app.quit();
-    Model { renderer: None, texture: None }
+    Model { renderer: None, texture: None, keys: HashSet::default() }
 }
 
 fn event(app: &App, model: &mut Model, event: Event) {
@@ -66,16 +68,11 @@ fn window_event(app: &App, model: &mut Model, _id: WindowId, event: WindowEvent)
                 app.quit();
             },
             KeyPressed(key) => {
-                match key {
-                    Key::Z | Key::Up => renderer.scene.write().unwrap().camera.forward(),
-                    Key::S | Key::Down => renderer.scene.write().unwrap().camera.backward(),
-                    Key::D | Key::Right => renderer.scene.write().unwrap().camera.right(),
-                    Key::Q | Key::Left => renderer.scene.write().unwrap().camera.left(),
-                    Key::Space => renderer.scene.write().unwrap().camera.up(),
-                    Key::LShift | Key::C => renderer.scene.write().unwrap().camera.down(),
-                    _ => ()
+                if !model.keys.contains(&key) {
+                    model.keys.insert(key);
                 }
             },
+            KeyReleased(key) => drop(model.keys.remove(&key)),
             _ => ()
         }
     }
@@ -83,6 +80,27 @@ fn window_event(app: &App, model: &mut Model, _id: WindowId, event: WindowEvent)
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
     if let Some(renderer) = &mut model.renderer {
+        if !model.keys.is_empty() {
+            let mut scene = renderer.scene.write().unwrap();
+            if model.keys.contains(&Key::Z) || model.keys.contains(&Key::Up) {
+                scene.camera.forward();
+            }
+            if model.keys.contains(&Key::S) || model.keys.contains(&Key::Down) {
+                scene.camera.backward();
+            }
+            if model.keys.contains(&Key::D) || model.keys.contains(&Key::Right) {
+                scene.camera.right();
+            }
+            if model.keys.contains(&Key::Q) || model.keys.contains(&Key::Left) {
+                scene.camera.left();
+            }
+            if model.keys.contains(&Key::Space) {
+                scene.camera.up();
+            }
+            if model.keys.contains(&Key::LShift) {
+                scene.camera.down();
+            }
+        }
         renderer.render();
     }
 }
