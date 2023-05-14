@@ -16,11 +16,11 @@ pub struct Rotation {
 }
 
 impl<'de> Rotation {
-    pub fn rotate_primitive<'a, A>(obj: Option<&'a mut Box<dyn Primitive>>, data : serde_yaml::Value) -> Result<(), A::Error>
+    pub fn rotate_primitive<'a, A>(obj: Option<&'a mut Box<dyn Primitive + Send + Sync>>, data : serde_yaml::Value) -> Result<(), A::Error>
     where
         A: serde::de::SeqAccess<'de>,
     {
-        let primitive : &'a mut Box<dyn Primitive>;
+        let primitive : &'a mut Box<dyn Primitive + Send + Sync>;
 
         match obj {
             Some(p) => primitive = p,
@@ -39,7 +39,7 @@ impl<'de> Rotation {
 }
 
 impl Rotation {
-    fn apply_transform(self, primitive : &mut Box<dyn Primitive>) {
+    fn apply_transform(self, primitive : &mut Box<dyn Primitive + Send + Sync>) {
             match self.axis {
                 RotAxis::X => primitive.rotate_x(self),
                 RotAxis::Y => primitive.rotate_y(self),

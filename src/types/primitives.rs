@@ -21,7 +21,7 @@ pub trait Primitive {
 }
 
 #[derive(Default)]
-pub struct PrimitiveVec(pub Vec<Box<dyn Primitive>>);
+pub struct PrimitiveVec(pub Vec<Box<dyn Primitive + Send + Sync>>);
 
 #[derive(Debug, Deserialize)]
 enum PrimitiveType {
@@ -49,8 +49,8 @@ impl<'de> serde::Deserialize<'de> for PrimitiveVec {
             where
                 A: serde::de::SeqAccess<'de>,
             {
-                let mut primitives: Vec<Box<dyn Primitive>> = Vec::new();
-                let mut primitive: Option<Box<dyn Primitive>>;
+                let mut primitives: Vec<Box<dyn Primitive + Send + Sync>> = Vec::new();
+                let mut primitive: Option<Box<dyn Primitive + Send + Sync>>;
 
                 while let Some((typ, data)) = seq.next_element::<(PrimitiveType, serde_yaml::Value)>()? {
                     match typ {

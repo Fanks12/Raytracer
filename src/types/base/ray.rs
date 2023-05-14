@@ -13,7 +13,7 @@ pub struct Ray {
 }
 
 impl Ray {
-    pub fn first_hit(&mut self, elements: &Vec<Box<dyn Primitive>>, lights: &Vec<LightPoint>) -> Color {
+    pub fn first_hit(&mut self, elements: &Vec<Box<dyn Primitive + Send + Sync>>, lights: &Vec<LightPoint>) -> Color {
         for element in elements {
             element.intersects(self);
         }

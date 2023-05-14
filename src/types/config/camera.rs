@@ -20,6 +20,30 @@ impl Camera {
             outputs: Vec::new(),
         }
     }
+
+    pub fn forward(&mut self) {
+        self.origin.z += 1.0;
+    }
+
+    pub fn backward(&mut self) {
+        self.origin.z -= 1.0;
+    }
+
+    pub fn up(&mut self) {
+        self.origin.y += 1.0;
+    }
+
+    pub fn down(&mut self) {
+        self.origin.y -= 1.0;
+    }
+
+    pub fn right(&mut self) {
+        self.origin.x += 1.0;
+    }
+
+    pub fn left(&mut self) {
+        self.origin.x -= 1.0;
+    }
 }
 
 #[derive(Default, Deserialize)]

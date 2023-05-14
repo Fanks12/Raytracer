@@ -17,7 +17,7 @@ pub struct Cylindre {
 }
 
 impl<'de> Cylindre {
-    pub fn create_cylindre_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    pub fn create_cylindre_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive + Send + Sync>, A::Error>
     where
         A: serde::de::SeqAccess<'de>,
     {
@@ -28,7 +28,7 @@ impl<'de> Cylindre {
                 return Err(serde::de::Error::custom(format!("Failed to deserialize cylindre: {}", err)));
             }
         }
-        Ok(Box::new(cylindre) as Box<dyn Primitive>)
+        Ok(Box::new(cylindre) as Box<dyn Primitive + Send + Sync>)
     }
 }
 

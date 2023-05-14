@@ -14,7 +14,7 @@ pub struct Plane {
 }
 
 impl<'de> Plane {
-    pub fn create_plane_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive>, A::Error>
+    pub fn create_plane_from_serde<A>(data : serde_yaml::Value) -> Result<Box<dyn Primitive + Send + Sync>, A::Error>
     where
         A: serde::de::SeqAccess<'de>,
     {
@@ -24,7 +24,7 @@ impl<'de> Plane {
                 return Err(serde::de::Error::custom(format!("Failed to deserialize plane: {}", err)));
             }
         };
-        Ok(Box::new(plane) as Box<dyn Primitive>)
+        Ok(Box::new(plane) as Box<dyn Primitive + Send + Sync>)
     }
 }
 
