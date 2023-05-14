@@ -13,6 +13,13 @@ impl Vector3D {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
+    pub fn cross_product(&self, other: Vector3D) -> Vector3D {
+        Vector3D {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x}
+    }
+
     pub fn length(&self) -> f64 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
@@ -33,6 +40,21 @@ impl Vector3D {
         }
         (self.dot_product(vec) / (length * lenght)).acos()
     }
+
+    pub fn rotate(&mut self, axis: Vector3D, angle: f64) {
+            let norm = self.normalize();
+            let cos_angle = angle.cos();
+            let sin_angle = angle.sin();
+            let dot_product = norm.dot_product(axis);
+            let cross_product = norm.cross_product(axis);
+            let v_rotated = Vector3D {
+                x: cos_angle * norm.x + (1.0 - cos_angle) * dot_product * axis.x + sin_angle * cross_product.x,
+                y: cos_angle * norm.y + (1.0 - cos_angle) * dot_product * axis.y + sin_angle * cross_product.y,
+                z: cos_angle * norm.z + (1.0 - cos_angle) * dot_product * axis.z + sin_angle * cross_product.z };
+            self.x = v_rotated.x;
+            self.y = v_rotated.y;
+            self.z = v_rotated.z;
+        }
 }
 
 impl Default for Vector3D {
