@@ -29,14 +29,20 @@ primitives:
       x: 0.0
       y: 0.0
       z: 0.0
-    radius: 4.0
+    radius: 10.0
     color:
       r: 255
       g: 0
       b: 0
 - - Plane
-  - axis: Y
-    padding: 5
+  - point:
+      x: 0
+      y: -5
+      z: 0
+    norm:
+      x: 0
+      y: 1
+      z: 0
     color:
       r: 0
       g: 0

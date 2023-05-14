@@ -27,8 +27,8 @@ impl Ray {
         let mut dist: f64 = -1.0;
         let mut closest = (Point3D {..Default::default()}, Color {..Default::default()});
         for element in &self.hits {
-            if dist < 0.0 || self.origin.dist(element.0) < dist {
-                dist = self.origin.dist(element.0);
+            if dist < 0.0 || self.origin.distance(element.0) < dist {
+                dist = self.origin.distance(element.0);
                 closest = *element;
             }
         }
